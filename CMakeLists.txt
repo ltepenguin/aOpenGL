@@ -1,71 +1,23 @@
-# aOpenGL source files
-add_library(aOpenGL SHARED 
-    # src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/app.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/appmanager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/eigentype.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ik.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/image.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/joint.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/light.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/material.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/mesh.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/render.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/renderoption.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/util.cpp
+cmake_minimum_required(VERSION 3.10)
 
-    # core
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/mesh.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/shader.cpp
+# set project
+project(aOpenGL VERSION 1.0.0)
+set(CMAKE_CXX_COMPLIER "g++")
+set(CMAKE_CXX_STANDARD 17)
 
-    # primitives
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Icosphere.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Cubesphere.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Cylinder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Sphere.cpp
-    
-    # fbx parser
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_animation.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_material.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_mesh.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_skeleton.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_skin.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_texture.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbxparser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/keyframe.cpp
+# set output directory
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-    # glad
-    ${EXT_DIR}/glad/src/glad.c
-    )
+# options
+#add_compile_options(-Wall)
+#add_compile_options(-Wno-unused-variable)
+add_compile_options(-fPIC)
 
-# include directories
-target_include_directories(aOpenGL PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/glad/include)
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/glm)
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/stb)
+# set directories
+set(EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
 
-# eigen
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/eigen)
-
-# glfw
-find_library(GLFW NAMES libglfw3.a
-            HINTS ${EXT_DIR}/glfw/build/src
-            REQUIRED)
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/glfw/include)
-
-# fbxsdk
-find_library(FBXSDK NAMES libfbxsdk.so 
-             HINTS ${EXT_DIR}/fbxsdk/lib/gcc/x64/release
-             REQUIRED)
-find_library(XML2 NAMES xml2 REQUIRED) # xml2 is required in fbxsdk
-target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/fbxsdk/include)
-
-# link
-target_link_libraries(aOpenGL PUBLIC ${GLFW})
-target_link_libraries(aOpenGL PUBLIC ${FBXSDK} ${XML2})
-target_link_libraries(aOpenGL PUBLIC ${CMAKE_DL_LIBS})
+# source codes
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/code)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)

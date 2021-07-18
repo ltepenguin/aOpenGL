@@ -20,7 +20,7 @@ static bool is_equal_time(float t0, float t1)
  */
 static int search_key(const std::vector<KeyFrame>& frames, float target_time, int iter_idx, bool upper_checked)
 {
-    if(iter_idx >= frames.size())
+    if(iter_idx >= (int)frames.size())
         return frames.size() - 1;
     if(iter_idx < 0)
         return 0;
@@ -74,7 +74,7 @@ std::vector<KeyFrame> resample(const std::vector<KeyFrame>& frames, const std::v
     int max_idx = frames.size() - 1;
 
     int lower_idx = 0;
-    for(int i = 0; i < timestep.size(); ++i)
+    for(int i = 0; i < (int)timestep.size(); ++i)
     {
         float ti = timestep.at(i);
         lower_idx = search_key(frames, ti, lower_idx, false);
@@ -188,7 +188,7 @@ static std::vector<float> get_radians(const std::vector<KeyFrame>& keys, int nof
     }
     else
     {
-        assert(keys.size() == nof);
+        assert((int)keys.size() == nof);
         angles.reserve(nof);
         for(int i = 0; i < nof; ++i)
         {
@@ -226,13 +226,13 @@ std::vector<std::vector<glm::quat>> get_rotations_from_resampled(const std::vect
 
     // name to node index
     std::map<std::string, int> name_to_nodeidx;
-    for(int i = 0; i < scene->node_keyframes.size(); ++i)
+    for(int i = 0; i < (int)scene->node_keyframes.size(); ++i)
     {
         name_to_nodeidx[scene->node_keyframes.at(i)->name] = i;
     }
 
     // iterate
-    for(int i = 0; i < names.size(); ++i)
+    for(int i = 0; i < (int)names.size(); ++i)
     {
         auto iter = name_to_nodeidx.find(names.at(i));
         if(iter == name_to_nodeidx.end())
@@ -283,7 +283,7 @@ std::vector<glm::vec3> get_translations_from_resampled(std::string name, spScene
 {
     // get index
     int idx = -1;
-    for(int i = 0; i < scene->node_keyframes.size(); ++i)
+    for(int i = 0; i < (int)scene->node_keyframes.size(); ++i)
     {
         auto name_i = scene->node_keyframes.at(i)->name;
         if(name_i == name)

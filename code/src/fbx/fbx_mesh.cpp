@@ -104,7 +104,7 @@ void FBXParser::mesh_data(std::vector<MeshData>& meshes, float scale)
 
     meshes.clear();
     meshes.resize(meshNodes.size());
-    for(int i = 0; i < meshes.size(); ++i)
+    for(int i = 0; i < (int)meshes.size(); ++i)
     {
         auto node = meshNodes.at(i);
         FbxMesh* pMesh = node->GetMesh();
@@ -115,10 +115,10 @@ void FBXParser::mesh_data(std::vector<MeshData>& meshes, float scale)
         std::vector<MaterialParseInfo> materials = ::a::gl::fbx::getMaterials(pMesh);
         std::vector<int> materialConnection = ::a::gl::fbx::getPolygonMaterialConnection(pMesh);
 
-        for(int i = 0; i < textures.size(); ++i)
+        for(int i = 0; i < (int)textures.size(); ++i)
         {
             bool textureSet = false;
-            for(int j = 0; j < materials.size(); ++j)
+            for(int j = 0; j < (int)materials.size(); ++j)
             {
                 if(textures.at(i)._connected_material == materials.at(j).material_id)
                 {

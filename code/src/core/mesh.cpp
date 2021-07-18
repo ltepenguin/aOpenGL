@@ -78,7 +78,7 @@ void compute_tangent_space(std::vector<glm::vec3>& out_tan,
     out_tan.resize(vnum, glm::vec3(0, 0, 0));
     out_bitan.resize(vnum, glm::vec3(0, 0, 0));
 
-    for(int idx = 0; idx < indices.size(); idx+=3)
+    for(int idx = 0; idx < (int)indices.size(); idx+=3)
     {
         int vidx0 = indices.at(idx + 0);
         int vidx1 = indices.at(idx + 1);
