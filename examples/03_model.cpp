@@ -11,7 +11,6 @@ public:
 
     void start() override
     {
-        //agl::FBX fbx("../data/fbx/nsm/anubis.fbx");
         agl::FBX fbx("../data/fbx/kmodel/model/kmodel.fbx");
         model   = fbx.model();
         motions = fbx.motion(model);
@@ -20,11 +19,6 @@ public:
 
     void update() override
     {
-        // const auto& motion = motions.at(1);
-        // const auto& pose = motion.poses.at(frame);
-        // model->set_pose(pose);
-        // model->update_mesh();
-        // frame = (frame + 1) % (int)motion.poses.size();
     }
 
     void render() override

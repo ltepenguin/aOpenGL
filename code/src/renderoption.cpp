@@ -12,7 +12,7 @@ RenderOptions::RenderOptions(core::VAO vao,
     m_position(glm::vec3(0.0f, 0.0f, 0.0f)),
     m_orientation(glm::mat3(1.0f)),
     m_scale(glm::vec3(1.0f, 1.0f, 1.0f)),
-    m_materials(),
+    m_materials({Material()}),
     m_disp_map_scale(0.01f),
     m_uv_repeat(1.0f),
     m_draw_floor_grid(false),
@@ -20,7 +20,8 @@ RenderOptions::RenderOptions(core::VAO vao,
     m_use_skinning(false),
     m_buffer_transforms(),
     m_fpDraw(fpDraw)
-{}
+{
+}
 
 void RenderOptions::draw()
 {

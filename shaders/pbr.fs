@@ -21,6 +21,8 @@ uniform mat4 u_lightSpace;
 uniform vec3 u_lightColor;
 uniform bool u_debug;
 
+uniform vec3 u_skyColor;
+
 // ----------------------------------------------------------------------------
 #define MAX_MATERIAL_NUM 5
 uniform ivec4 u_mat_textureID1[MAX_MATERIAL_NUM]; // albedo, normal, metallic
@@ -457,7 +459,8 @@ void main()
 
     // Fog
     float D = length(u_viewPosition - fs_worldPos);
-    vec3 fog_color = vec3(0.8, 0.8, 0.82);
+    //vec3 fog_color = vec3(0.8, 0.8, 0.82);
+    vec3 fog_color = u_skyColor;
     float fog_amount = 1.0f - min(exp(-D * 0.03 + 1.5), 1.0);
     color = mix(color, fog_color, fog_amount);
 

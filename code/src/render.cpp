@@ -295,6 +295,7 @@ void Render::draw_pbr(spRenderOptions option)
         shader->setVec3("u_lightDirection", Render::app_render_info->light_direction);
         shader->setVec3("u_lightColor",     Render::app_render_info->light_color);
         shader->setMat4("u_lightSpace",     Render::app_render_info->light_space);
+        shader->setVec3("u_skyColor",       Render::app_render_info->sky_color);
         shader->view_update(true);
     }
 

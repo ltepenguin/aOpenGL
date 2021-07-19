@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "mprealsupport": "cpp",
+        "*.tcc": "cpp",
+        "random": "cpp"
+    }
+}
