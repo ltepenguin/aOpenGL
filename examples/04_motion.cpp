@@ -11,11 +11,8 @@ public:
 
     void start() override
     {
-        // const char* model_path  = "../data/fbx/kmodel/model/kmodel.fbx";
-        // const char* motion_path = "../data/fbx/kmodel/motion/ubi_sprint1_subject2.fbx";
-
-        const char* model_path  = "../data/fbx/nsm/anubis.fbx";
-        const char* motion_path = "../data/fbx/nsm/locomotion.fbx";
+        const char* model_path  = "../data/fbx/kmodel/model/kmodel.fbx";
+        const char* motion_path = "../data/fbx/kmodel/motion/ubi_sprint1_subject2.fbx";
 
         agl::FBX model_fbx(model_path);
         model = model_fbx.model();
