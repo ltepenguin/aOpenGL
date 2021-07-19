@@ -35,7 +35,7 @@ public:
     static spRenderOptions    pyramid();
 
     static spRenderOptions    mesh(spMesh);
-    static spRenderOptionsVec model(spModel);
+    static spRenderOptionsVec model(spModel m, bool update_mesh = true);
     static spRenderOptionsVec skeleton(spModel);
 
     static void set_sky_color(float r, float g, float b);

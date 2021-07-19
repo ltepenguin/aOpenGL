@@ -65,6 +65,8 @@ public:
     const std::vector<spJoint>  joints() const;
     spJoint                     joint(const std::string& name);
     const spJoint               joint(const std::string& name) const;
+    spJoint                     joint(int jidx);
+    const spJoint               joint(int jidx) const;
     std::vector<spJoint>        joints(const std::vector<std::string>& names);
     const std::vector<spJoint>  joints(const std::vector<std::string>& names) const;
 

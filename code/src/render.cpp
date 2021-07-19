@@ -129,8 +129,11 @@ spRenderOptions Render::mesh(spMesh m)
     return ro;
 }
 
-spRenderOptionsVec Render::model(spModel m)
+spRenderOptionsVec Render::model(spModel m, bool update_mesh)
 {
+    if(update_mesh)
+        m->update_mesh();
+
     auto meshes = m->meshes();
     std::vector<spRenderOptions> rov;
     rov.reserve(m->mesh_number());

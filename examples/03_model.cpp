@@ -14,7 +14,15 @@ public:
         agl::FBX fbx("../data/fbx/kmodel/model/kmodel.fbx");
         model   = fbx.model();
         motions = fbx.motion(model);
-        model->update_mesh();
+
+        // Print joint names ------------------------------------//
+        {
+            std::vector<agl::spJoint> joints = model->joints();
+            for(int i = 0; i < joints.size(); ++i)
+            {
+                std::cout << i << " joint : " << joints.at(i)->name() << std::endl;
+            }
+        }
     }
 
     void update() override

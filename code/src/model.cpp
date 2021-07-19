@@ -151,6 +151,16 @@ const spJoint Model::joint(const std::string& name) const
         return nullptr;
 }
 
+spJoint Model::joint(int jidx)
+{
+    return joints().at(jidx);
+}
+
+const spJoint Model::joint(int jidx) const
+{
+    return joints().at(jidx);
+}
+
 std::vector<spJoint> Model::joints(const std::vector<std::string>& names)
 {
     std::vector<spJoint> results;

@@ -19,6 +19,18 @@ public:
        
         agl::FBX motion_fbx(motion_path);
         motions = motion_fbx.motion(model);
+
+        // Print motion name -------------------------------------------- //
+        {
+            std::cout << motion_path << " imported" << std::endl;
+            std::cout << "number of motions: " << motions.size() << std::endl;
+            for(int i = 0; i < motions.size(); ++i)
+            {
+                std::cout << "motion " << i << std::endl;
+                std::cout << "\tname : " << motions.at(i).name << std::endl;
+                std::cout << "\tnumber of frames : " << motions.at(i).poses.size() << std::endl;
+            }
+        }
     }
 
     void update() override
@@ -26,7 +38,6 @@ public:
         const auto& motion = motions.at(0);
         const auto& pose = motion.poses.at(frame);
         model->set_pose(pose);
-        model->update_mesh();
         frame = (frame + 1) % (int)motion.poses.size();
     }
 
@@ -38,8 +49,7 @@ public:
             ->floor_grid(true)
             ->draw();
 
-        agl::Render::model(model)
-            ->draw();
+        agl::Render::model(model)->draw();
     }
 
     void render_xray() override

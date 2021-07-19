@@ -2,6 +2,7 @@
     "files.associations": {
         "mprealsupport": "cpp",
         "*.tcc": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -66,6 +66,8 @@ void Mesh::update_mesh()
 {
     if(m_joints.size() == 0)
         return;
+    
+    m_joints.at(0)->update_world_trf_children();
 
     const auto& jnt_order = m_jnt_buffer_idx;
     

@@ -18,6 +18,10 @@ target_link_libraries(motion PUBLIC aOpenGL)
 add_executable(sphere ${CMAKE_CURRENT_SOURCE_DIR}/05_sphere.cpp)
 target_link_libraries(sphere PUBLIC aOpenGL)
 
-# example 06: stitching
-add_executable(stitching ${CMAKE_CURRENT_SOURCE_DIR}/06_stitching.cpp)
+# example 06: root
+add_executable(root ${CMAKE_CURRENT_SOURCE_DIR}/06_root.cpp)
+target_link_libraries(root PUBLIC aOpenGL)
+
+# example 07: stitching
+add_executable(stitching ${CMAKE_CURRENT_SOURCE_DIR}/07_stitching.cpp)
 target_link_libraries(stitching PUBLIC aOpenGL)
