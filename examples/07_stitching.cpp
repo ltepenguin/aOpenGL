@@ -10,20 +10,20 @@ static std::vector<agl::Pose> stitch(
     //
     // ----------------------------------------------------------------- //
     
-    // Dummy code
+    // Dummy code ------------------------------------------------------ //
     std::vector<agl::Pose> new_poses = poses_a;
     new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
-
     return new_poses;
+    // ----------------------------------------------------------------- //
 }
 
 class MyApp : public agl::App
 {
 public:
-    agl::spModel model;
-    agl::Motion  motion_a;
-    agl::Motion  motion_b;
-    std::vector<agl::Pose> stitched;
+    agl::spModel            model;
+    agl::Motion             motion_a;
+    agl::Motion             motion_b;
+    std::vector<agl::Pose>  stitched;
 
     void start()
     {       
@@ -35,7 +35,7 @@ public:
         agl::FBX motion_a_fbx(motion_path_a);
         agl::FBX motion_b_fbx(motion_path_b);
         
-        model     = model_fbx.model();
+        model    = model_fbx.model();
         motion_a = motion_a_fbx.motion(model).at(0);
         motion_b = motion_b_fbx.motion(model).at(0);
 

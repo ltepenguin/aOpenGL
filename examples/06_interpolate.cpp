@@ -8,10 +8,10 @@ static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, f
     //
     // ----------------------------------------------------------------- //
 
-    // Dummy code
+    // Dummy code ------------------------------------------------------ //
     agl::Pose pose = pose_a;
-
     return pose;
+    // ----------------------------------------------------------------- //
 }
 
 class MyApp : public agl::App
