@@ -8,15 +8,18 @@
 7. `./FBX20202_FBXFILESDK_LINUX ./fbxsdk`
 8. Copy files inside the folder **./fbxsdk** into the **aOpenGL/ext/fbxsdk**
 
+NOTE: FBXSDK requires xml2 library.
+
 ## Other Libraries (GLM, GLFW)
-1. Go to the **ext/[LIBRARY]**
+1. Go to the **aOpenGL/ext/[LIBRARY]**
 2. `mkdir build`
 3. `cd build`
 4. `cmake ..`
 5. `make -j`
 
 ## Build
-1. `mkdir build`
-2. `cd build`
-3. `cmake ..`
-4. `make -j`
+1. Go to the **aOpenGL/**
+2. `mkdir build`
+3. `cd build`
+4. `cmake ..`
+5. `make -j`
