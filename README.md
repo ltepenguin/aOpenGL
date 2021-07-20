@@ -2,12 +2,11 @@
 1. Go to the link:  https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0
 2. Download FBX SDK 2020.0.1 (Linux)
 3. Unzip **fbx20202_fbxsdk_linux.tar.gz**
-4. Install FBXSDK
-5. Go to the folder, and type command into the terminal: 
-6. Create folder **fbxsdk**
-7. `chmod ugo+x FBX20202_FBXFILESDK_LINUX`
-8. `./FBX20202_FBXFILESDK_LINUX ./fbxsdk`
-9. Copy files inside the folder **./fbxsdk** into the **aOpenGL/ext/fbxsdk**
+4. Go to the folder
+5. `mkdir fbxsdk`
+6. `chmod ugo+x FBX20202_FBXFILESDK_LINUX`
+7. `./FBX20202_FBXFILESDK_LINUX ./fbxsdk`
+8. Copy files inside the folder **./fbxsdk** into the **aOpenGL/ext/fbxsdk**
 
 ## Other Libraries (GLM, GLFW)
 1. Go to the **ext/[LIBRARY]**
