@@ -13,6 +13,13 @@
         "functional": "cpp",
         "valarray": "cpp",
         "iterator": "cpp",
-        "bvh": "cpp"
+        "bvh": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "hash_map": "cpp",
+        "initializer_list": "cpp"
     }
 }

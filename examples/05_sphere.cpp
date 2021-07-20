@@ -16,6 +16,7 @@ public:
         if(angle > M_PI)
             angle -= (2.0f * M_PI);
         
+        camera().set_perspective(false);
         camera().set_position(glm::vec3(0, 0, 3));
         camera().set_focus(glm::vec3(0, 0, 0));
     }
