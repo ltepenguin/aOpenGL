@@ -34,7 +34,9 @@ glm::vec3 getAxis(const glm::mat3& mat, int idx)
 
 Camera::Camera(): m_position(glm::vec3(0, 1, 1)),
                   m_orientation(glm::mat3(1.0)),
-                  m_focus_position(glm::vec3(0, 1, 0))
+                  m_focus_position(glm::vec3(0, 1, 0)),
+                  m_is_perspective(true),
+                  m_ortho_zoom(100.0f)
 {
     this->update();
 }
@@ -56,6 +58,8 @@ void Camera::mouse_scroll_input(float yoffset)
     m_position += 0.1f * front * yoffset;
     m_focus_position += 0.1f * front * yoffset;
     this->update();
+
+    m_ortho_zoom -= 10.0f * yoffset;
 }
 
 void Camera::mouse_move(float xoffset, float yoffset)
@@ -72,6 +76,21 @@ void Camera::mouse_move(float xoffset, float yoffset)
     m_position += dT;
     m_focus_position += dT;
     this->update();
+}
+
+void Camera::set_position(const Vec3& p)
+{
+    this->set_position(a::gl::to_glm(p));
+}
+
+void Camera::set_focus(const Vec3& fp)
+{
+    this->set_focus(a::gl::to_glm(fp));
+}
+
+void Camera::set_focus(const Vec3& fp, float distance)
+{
+    this->set_focus(a::gl::to_glm(fp), distance);
 }
 
 void Camera::set_position(const glm::vec3& p)
@@ -99,7 +118,33 @@ void Camera::set_focus(const glm::vec3& fp, float distance)
     update();
 }
 
-glm::mat4 Camera::view_matrix() const
+Mat4 Camera::view_matrix() const
+{
+    return a::gl::to_eigen(this->view_matrix_gl());
+}
+
+Vec3 Camera::focus_position() const
+{
+    return a::gl::to_eigen(this->focus_position_gl());
+}
+
+Vec3 Camera::position() const
+{
+    return a::gl::to_eigen(this->position_gl());
+}
+
+Vec3 Camera::direction() const
+{
+    return a::gl::to_eigen(this->direction_gl());
+}
+
+Mat3 Camera::orientation() const
+{
+    return a::gl::to_eigen(this->orientation_gl());
+}
+
+
+glm::mat4 Camera::view_matrix_gl() const
 {
     glm::vec3 up    = m_orientation[1];
     glm::vec3 front = m_orientation[2];
@@ -108,22 +153,22 @@ glm::mat4 Camera::view_matrix() const
     return glm::lookAt(m_position, m_position + front, up);
 }
 
-glm::vec3 Camera::focus_position() const
+glm::vec3 Camera::focus_position_gl() const
 {
     return m_focus_position;
 }
 
-glm::vec3 Camera::position() const
+glm::vec3 Camera::position_gl() const
 {
     return m_position;
 }
 
-glm::vec3 Camera::direction() const
+glm::vec3 Camera::direction_gl() const
 {
     return glm::normalize(m_position - m_focus_position);
 }
 
-glm::mat3 Camera::orientation() const
+glm::mat3 Camera::orientation_gl() const
 {
     return m_orientation;
 }

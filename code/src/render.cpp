@@ -263,9 +263,17 @@ void Render::update_render_view(App* app, int width, int height)
     const auto& cam = app->camera();
     const auto& light = app->light();
     
-    app_render_info->cam_position = cam.position();
-    app_render_info->cam_projection = glm::perspective(glm::radians(cam.zoom()), (float)width / (float)height, 0.1f, 1000.0f);
-    app_render_info->cam_view = cam.view_matrix();
+    app_render_info->cam_position = cam.position_gl();
+    if(cam.is_perspective())
+    {
+        app_render_info->cam_projection = glm::perspective(glm::radians(cam.zoom()), (float)width / (float)height, 0.1f, 1000.0f);
+    }
+    else
+    {
+        float scale = 0.00001f * cam.ortho_zoom();
+        app_render_info->cam_projection = glm::ortho(-scale * width, scale * width, -scale * height, scale * height, -100.0f, 1000.0f);
+    }
+    app_render_info->cam_view = cam.view_matrix_gl();
     app_render_info->light_direction = light.direction;
     app_render_info->light_color = light.intensity * light.color;
     app_render_info->light_space = light.light_space_matrix();

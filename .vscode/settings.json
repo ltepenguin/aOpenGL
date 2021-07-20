@@ -3,6 +3,16 @@
         "mprealsupport": "cpp",
         "*.tcc": "cpp",
         "random": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "streambuf": "cpp",
+        "functional": "cpp",
+        "valarray": "cpp",
+        "iterator": "cpp",
+        "bvh": "cpp"
     }
 }
