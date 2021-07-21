@@ -8,7 +8,9 @@
 7. `./FBX20202_FBXFILESDK_LINUX ./fbxsdk`
 8. Copy files inside the folder **./fbxsdk** into the **aOpenGL/ext/fbxsdk**
 
-NOTE: FBXSDK requires xml2 library.
+NOTE: FBXSDK requires xml2 library
+
+`sudo apt-get install libxml2-dev`
 
 ## Other Libraries (GLM, GLFW)
 1. Go to the **aOpenGL/ext/[LIBRARY]**
