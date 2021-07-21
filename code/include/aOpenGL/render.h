@@ -25,7 +25,7 @@ using spRenderOptionsVec = std::shared_ptr<RenderOptionsVec>;
 class Render
 {
 public:
-    enum class RenderMode{SHADOW, Z_ALPHA, PBR_NON_ALPHA, PBR_ALPHA};
+    enum class RenderMode{SHADOW, PBR};
 
     static spRenderOptions    cube();
     static spRenderOptions    sphere();
@@ -48,6 +48,8 @@ private:
      * App manager에서 Render 관리. private 함수들 call.
      */
     friend class AppManager;
+    friend class RenderOptions;
+    friend class RenderOptionsVec;
 
     /**
      * @brief initialize all the shaders. 단 한번만 call 할 것.
@@ -73,12 +75,12 @@ private:
     /**
      * @brief pbr rendering function
      */
-    static void draw_pbr(spRenderOptions option);
+    static void draw_pbr(spRenderOptions option, core::Shader* shader);
     
     /**
      * @brief shadow rendering function
      */
-    static void draw_shadow(spRenderOptions option);
+    static void draw_shadow(spRenderOptions option, core::Shader* shader);
 
 private:
     // shadow mode

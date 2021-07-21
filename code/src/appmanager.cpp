@@ -155,21 +155,12 @@ void AppManager::start_loop()
 
         // render
         {
-            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_NON_ALPHA, width, height);
+            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR, width, height);
             glViewport(0, 0, width, height);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             ::a::gl::AppManager::app->render();
         }
-
-        // render alphas
-        {
-            ::a::gl::Render::set_render_mode(Render::RenderMode::Z_ALPHA, width, height);
-            ::a::gl::AppManager::app->render();
-
-            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_ALPHA, width, height);
-            ::a::gl::AppManager::app->render();
-        }
-
+        
         // render environment map
         {
             //::a::gl::Render::background();
@@ -177,7 +168,7 @@ void AppManager::start_loop()
 
         // render xray
         {
-            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_NON_ALPHA, width, height);
+            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR, width, height);
             glClear(GL_DEPTH_BUFFER_BIT);
             ::a::gl::AppManager::app->render_xray();
         }

@@ -52,15 +52,11 @@ std::shared_ptr<Render::AppRenderInfo> Render::app_render_info;
 #define AGL_RETURN_PBR_RENDER_OPTIONS(PRIMITIVE) \
     if(render_type == Render::RenderMode::SHADOW) { \
         return std::make_shared<RenderOptions>( \
-            RenderOptions(PRIMITIVE, Render::shadow_shader, Render::draw_shadow)); \
-    } \
-    else if (render_type == Render::RenderMode::Z_ALPHA) { \
-        return std::make_shared<RenderOptions>( \
-            RenderOptions(PRIMITIVE, Render::alpha_primitive_shader, Render::draw_pbr)); \
+            RenderOptions(PRIMITIVE, Render::shadow_shader, nullptr, Render::draw_shadow)); \
     } \
     else { \
         return std::make_shared<RenderOptions>( \
-            RenderOptions(PRIMITIVE, Render::primitive_shader, Render::draw_pbr)); \
+            RenderOptions(PRIMITIVE, Render::primitive_shader, Render::alpha_primitive_shader, Render::draw_pbr)); \
     }
 
 spRenderOptions Render::cube()
@@ -102,19 +98,13 @@ spRenderOptions Render::mesh(spMesh m)
         if(render_type == Render::RenderMode::SHADOW)
         {
             ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::shadow_shader, Render::draw_shadow)
-            );
-        }
-        else if (render_type == Render::RenderMode::Z_ALPHA)
-        {
-            ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::alpha_lbs_shader, Render::draw_pbr)
+                RenderOptions(m->m_meshGL->vao, Render::shadow_shader, nullptr, Render::draw_shadow)
             );
         }
         else
         {
             ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::lbs_shader, Render::draw_pbr)
+                RenderOptions(m->m_meshGL->vao, Render::lbs_shader, Render::alpha_lbs_shader, Render::draw_pbr)
             );
         }        
         
@@ -127,19 +117,13 @@ spRenderOptions Render::mesh(spMesh m)
         if(render_type == Render::RenderMode::SHADOW)
         {
             ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::shadow_shader, Render::draw_shadow)
-            );
-        }
-        else if (render_type == Render::RenderMode::Z_ALPHA)
-        {
-            ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::alpha_primitive_shader, Render::draw_pbr)
+                RenderOptions(m->m_meshGL->vao, Render::shadow_shader, nullptr, Render::draw_shadow)
             );
         }
         else
         {
             ro = std::make_shared<RenderOptions>(
-                RenderOptions(m->m_meshGL->vao, Render::primitive_shader, Render::draw_pbr)
+                RenderOptions(m->m_meshGL->vao, Render::primitive_shader, Render::alpha_primitive_shader, Render::draw_pbr)
             );
         }
     }
@@ -226,16 +210,13 @@ void Render::initialize_shaders()
     Render::lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_PBR_FS);
     Render::lbs_shader->build();
 
-    // TESTING
-    {
-        // pbr shader initialize
-        Render::alpha_primitive_shader = new core::Shader(A_GL_PBR_VS, A_GL_EMPTY_FS);
-        Render::alpha_primitive_shader->build();
+    // pbr shader initialize
+    Render::alpha_primitive_shader = new core::Shader(A_GL_PBR_VS, A_GL_EMPTY_FS);
+    Render::alpha_primitive_shader->build();
 
-        // lbs shader initialize
-        Render::alpha_lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_EMPTY_FS);
-        Render::alpha_lbs_shader->build();
-    }
+    // lbs shader initialize
+    Render::alpha_lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_EMPTY_FS);
+    Render::alpha_lbs_shader->build();
 
     // IBL map initialize
     Render::tocube_shader = new core::Shader(A_GL_TOCUBE_VS, A_GL_TOCUBE_FS);
@@ -260,14 +241,6 @@ void Render::set_render_mode(Render::RenderMode type, int width, int height)
     if(type == Render::RenderMode::SHADOW)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, Render::depth_map_fbo);
-    }
-    else if (type == Render::RenderMode::Z_ALPHA)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-    else if (type == Render::RenderMode::PBR_ALPHA)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     else
     {
@@ -325,27 +298,29 @@ void Render::update_render_view(App* app, int width, int height)
     }
 }
 
-void Render::draw_pbr(spRenderOptions option)
+void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
 {
-    bool is_transparent = option->is_transparent();
+    if(shader == nullptr)
+        return;
+    //bool is_transparent = option->is_transparent();
 
-    if(render_type == RenderMode::PBR_NON_ALPHA)
-    {
-        if(is_transparent)
-            return;
-    }
-    if(render_type == RenderMode::PBR_ALPHA)
-    {
-        if(is_transparent == false)
-            return;
-    }
-    if(render_type == RenderMode::Z_ALPHA)
-    {
-        if(is_transparent == false)
-            return;
-    }
+    // if(render_type == RenderMode::PBR_NON_ALPHA)
+    // {
+    //     if(is_transparent)
+    //         return;
+    // }
+    // if(render_type == RenderMode::PBR_ALPHA)
+    // {
+    //     if(is_transparent == false)
+    //         return;
+    // }
+    // if(render_type == RenderMode::Z_ALPHA)
+    // {
+    //     if(is_transparent == false)
+    //         return;
+    // }
    
-    auto shader = option->m_shader;
+    //auto shader = option->m_shader;
     
     if(shader == nullptr)
         return;
@@ -480,9 +455,11 @@ void Render::draw_pbr(spRenderOptions option)
     }
 }
 
-void Render::draw_shadow(spRenderOptions option)
+void Render::draw_shadow(spRenderOptions option, core::Shader* shader)
 {
-    auto shader = option->m_shader;
+    if(shader == nullptr)
+        return;
+    //auto shader = option->m_shader;
     
     if(shader == nullptr) 
         return;

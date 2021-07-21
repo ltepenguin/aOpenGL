@@ -23,7 +23,8 @@ class RenderOptions : public std::enable_shared_from_this<RenderOptions>
 public:
     RenderOptions(core::VAO vao, 
                   core::Shader* shader, 
-                  void (*fpDraw)(spRenderOptions));
+                  core::Shader* alpha_shader, 
+                  void (*fpDraw)(spRenderOptions, core::Shader*));
    
     void draw();
   
@@ -51,13 +52,16 @@ public:
 
 private:
     bool is_transparent();
+    void alpha_draw();
 
 private:   
     friend class Render;
+    friend class RenderOptionsVec;
 
     // basic rendering information
     core::VAO              m_vao;
     core::Shader*          m_shader;
+    core::Shader*          m_alpha_shader;
 
     // transformation
     glm::vec3              m_position;
@@ -78,7 +82,7 @@ private:
     std::vector<glm::mat4> m_buffer_transforms;
 
     // final drawing function pointer
-    void (*m_fpDraw)(spRenderOptions);
+    void (*m_fpDraw)(spRenderOptions, core::Shader* shader);
 };
 
 /**

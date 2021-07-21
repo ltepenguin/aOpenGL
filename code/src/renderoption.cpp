@@ -1,14 +1,17 @@
 #include "aOpenGL/renderoption.h"
 #include "aOpenGL/joint.h"
+#include "aOpenGL/render.h"
 #include <iostream>
 
 namespace a::gl {
 
 RenderOptions::RenderOptions(core::VAO vao, 
                              core::Shader* shader, 
-                             void (*fpDraw)(spRenderOptions)):
+                             core::Shader* alpha_shader, 
+                             void (*fpDraw)(spRenderOptions, core::Shader*)):
     m_vao(vao),
     m_shader(shader),
+    m_alpha_shader(alpha_shader),
     m_position(glm::vec3(0.0f, 0.0f, 0.0f)),
     m_orientation(glm::mat3(1.0f)),
     m_scale(glm::vec3(1.0f, 1.0f, 1.0f)),
@@ -25,7 +28,12 @@ RenderOptions::RenderOptions(core::VAO vao,
 
 void RenderOptions::draw()
 {
-    this->m_fpDraw(shared_from_this());
+    this->m_fpDraw(shared_from_this(), this->m_shader);
+}
+
+void RenderOptions::alpha_draw()
+{
+    this->m_fpDraw(shared_from_this(), this->m_alpha_shader);
 }
 
 spRenderOptions RenderOptions::position(Vec3 pos)
@@ -231,8 +239,27 @@ RenderOptionsVec::RenderOptionsVec(std::vector<spRenderOptions>& list)
 
 void RenderOptionsVec::draw()
 {
+#if 1
+    for(auto& ro : m_render_list)
+    {
+        if(Render::render_type == Render::RenderMode::SHADOW)
+        {
+            ro->draw();
+        }
+        else
+        {
+            bool transparent = ro->is_transparent();
+            if(transparent)
+            {
+                ro->alpha_draw();
+            }
+            ro->draw();
+        }
+    }
+#else
     for(auto& ro : m_render_list)
         ro->draw();
+#endif
 }
 
 spRenderOptionsVec RenderOptionsVec::orientation(Mat3 m3)
