@@ -271,6 +271,7 @@ void main()
 
     // find material attributes
     vec3  mat_color     = u_mat_color[fs_materialID].rgb;
+    float alpha         = u_mat_color[fs_materialID].w;
     float mat_metallic  = u_mat_attrib[fs_materialID].x;
     float mat_roughness = u_mat_attrib[fs_materialID].y;
 
@@ -432,6 +433,7 @@ void main()
     shadow = clamp(shadow, 0.0, 1.0);
 
     vec3 gridCol = vec3(0.0);
+    
     if(u_floor_grid)
     {
         vec2 dpdx = dFdx(fs_worldPos.xz);
@@ -459,10 +461,9 @@ void main()
 
     // Fog
     float D = length(u_viewPosition - fs_worldPos);
-    //vec3 fog_color = vec3(0.8, 0.8, 0.82);
     vec3 fog_color = u_skyColor;
     float fog_amount = 1.0f - min(exp(-D * 0.03 + 1.5), 1.0);
     color = mix(color, fog_color, fog_amount);
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, alpha);
 }

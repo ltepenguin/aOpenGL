@@ -19,7 +19,7 @@
 #define A_GL_PBR_FS                 "../shaders/pbr.fs"
 #define A_GL_LBS_PBR_VS             "../shaders/pbr_lbs.vs"
 #define A_GL_SHADOW_VS              "../shaders/shadow.vs"
-#define A_GL_SHADOW_FS              "../shaders/shadow.fs"
+#define A_GL_EMPTY_FS               "../shaders/empty.fs"
 
 // Shadow map size
 #define A_GL_SHADOW_MAP_SIZE        4 * 1024

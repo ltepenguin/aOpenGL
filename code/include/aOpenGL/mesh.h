@@ -49,9 +49,11 @@ public:
     ~Mesh() = default;
 
     /**
-     * @brief Set the materials object
+     * @brief Copies the materials object
      */
     void set_materials(const std::vector<Material>& materials);
+    
+    std::vector<Material> materials();
 
     /**
      * @brief Update m_buffer

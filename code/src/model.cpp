@@ -76,6 +76,8 @@ spModel Model::copy() const
             auto mesh = use_skinning ? 
                 std::make_shared<a::gl::Mesh>(copied, *m_meshes.at(i).get()) :
                 std::make_shared<a::gl::Mesh>(*m_meshes.at(i).get());
+            
+            mesh->set_materials(m_meshes.at(i)->materials());
             meshes.push_back(mesh);
         }
         return std::make_shared<Model>(copied, meshes);

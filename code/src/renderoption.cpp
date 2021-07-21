@@ -208,6 +208,20 @@ spRenderOptions RenderOptions::debug(bool is_debug)
     return shared_from_this();
 }
 
+bool RenderOptions::is_transparent()
+{
+    bool transparent = false;
+    for(auto& material : m_materials)
+    {
+        if(material.alpha != 1.0f)
+        {
+            transparent = true;
+            break;
+        }
+    }
+    return transparent;
+}
+
 // ****** RenderOptionsVec ****** //
 
 RenderOptionsVec::RenderOptionsVec(std::vector<spRenderOptions>& list)
@@ -290,7 +304,16 @@ spRenderOptionsVec RenderOptionsVec::debug(bool is_debug)
 {
     for(auto& ro : m_render_list)
     {
-        ro->debug(true);
+        ro->debug(is_debug);
+    }
+    return shared_from_this();
+}
+
+spRenderOptionsVec RenderOptionsVec::alpha(float a)
+{
+    for(auto& ro : m_render_list)
+    {
+        ro->alpha(a);
     }
     return shared_from_this();
 }

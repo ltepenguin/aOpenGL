@@ -16,12 +16,15 @@
 namespace a::gl {
 
 // shadow mode
-bool Render::use_shadow;
+Render::RenderMode Render::render_type;
 
 // shaders
 core::Shader* Render::primitive_shader;
 core::Shader* Render::lbs_shader;
 core::Shader* Render::shadow_shader;
+
+core::Shader* Render::alpha_primitive_shader;
+core::Shader* Render::alpha_lbs_shader;
 
 // shadows
 unsigned int Render::depth_map_fbo;
@@ -47,9 +50,13 @@ std::shared_ptr<Render::AppRenderInfo> Render::app_render_info;
 // Functions *** //
 
 #define AGL_RETURN_PBR_RENDER_OPTIONS(PRIMITIVE) \
-    if(Render::use_shadow) { \
+    if(render_type == Render::RenderMode::SHADOW) { \
         return std::make_shared<RenderOptions>( \
             RenderOptions(PRIMITIVE, Render::shadow_shader, Render::draw_shadow)); \
+    } \
+    else if (render_type == Render::RenderMode::Z_ALPHA) { \
+        return std::make_shared<RenderOptions>( \
+            RenderOptions(PRIMITIVE, Render::alpha_primitive_shader, Render::draw_pbr)); \
     } \
     else { \
         return std::make_shared<RenderOptions>( \
@@ -92,10 +99,16 @@ spRenderOptions Render::mesh(spMesh m)
 
     if(m->m_use_skinning)
     {
-        if(Render::use_shadow)
+        if(render_type == Render::RenderMode::SHADOW)
         {
             ro = std::make_shared<RenderOptions>(
                 RenderOptions(m->m_meshGL->vao, Render::shadow_shader, Render::draw_shadow)
+            );
+        }
+        else if (render_type == Render::RenderMode::Z_ALPHA)
+        {
+            ro = std::make_shared<RenderOptions>(
+                RenderOptions(m->m_meshGL->vao, Render::alpha_lbs_shader, Render::draw_pbr)
             );
         }
         else
@@ -111,10 +124,16 @@ spRenderOptions Render::mesh(spMesh m)
     }
     else
     {
-        if(Render::use_shadow)
+        if(render_type == Render::RenderMode::SHADOW)
         {
             ro = std::make_shared<RenderOptions>(
                 RenderOptions(m->m_meshGL->vao, Render::shadow_shader, Render::draw_shadow)
+            );
+        }
+        else if (render_type == Render::RenderMode::Z_ALPHA)
+        {
+            ro = std::make_shared<RenderOptions>(
+                RenderOptions(m->m_meshGL->vao, Render::alpha_primitive_shader, Render::draw_pbr)
             );
         }
         else
@@ -207,6 +226,17 @@ void Render::initialize_shaders()
     Render::lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_PBR_FS);
     Render::lbs_shader->build();
 
+    // TESTING
+    {
+        // pbr shader initialize
+        Render::alpha_primitive_shader = new core::Shader(A_GL_PBR_VS, A_GL_EMPTY_FS);
+        Render::alpha_primitive_shader->build();
+
+        // lbs shader initialize
+        Render::alpha_lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_EMPTY_FS);
+        Render::alpha_lbs_shader->build();
+    }
+
     // IBL map initialize
     Render::tocube_shader = new core::Shader(A_GL_TOCUBE_VS, A_GL_TOCUBE_FS);
     Render::tocube_shader->build();
@@ -217,7 +247,7 @@ void Render::initialize_shaders()
     //Render::background_shader->build();
 
     // shader map initialize
-    Render::shadow_shader = new core::Shader(A_GL_SHADOW_VS, A_GL_SHADOW_FS);
+    Render::shadow_shader = new core::Shader(A_GL_SHADOW_VS, A_GL_EMPTY_FS);
     Render::shadow_shader->build();
     generate_shadow_buffer(Render::depth_map_fbo, Render::depth_map_handle, A_GL_SHADOW_MAP_SIZE);
 
@@ -225,22 +255,26 @@ void Render::initialize_shaders()
     app_render_info = std::make_shared<AppRenderInfo>();
 }
 
-void Render::set_shadow_mode(bool use_shadow, int width, int height)
+void Render::set_render_mode(Render::RenderMode type, int width, int height)
 {
-    if(use_shadow)
+    if(type == Render::RenderMode::SHADOW)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, Render::depth_map_fbo);
-        glViewport(0, 0, A_GL_SHADOW_MAP_SIZE, A_GL_SHADOW_MAP_SIZE);
-        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+    else if (type == Render::RenderMode::Z_ALPHA)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    else if (type == Render::RenderMode::PBR_ALPHA)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     else
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-    }    
+    }
     
-    Render::use_shadow = use_shadow;
+    Render::render_type = type;
 }
 
 glm::vec4 Render::sky_color()
@@ -280,7 +314,8 @@ void Render::update_render_view(App* app, int width, int height)
 
     static std::vector<core::Shader*> shader_list = 
     {
-        Render::primitive_shader, Render::lbs_shader
+        Render::primitive_shader, Render::lbs_shader, 
+        Render::alpha_primitive_shader, Render::alpha_lbs_shader
     };
     
     for(auto shader : shader_list)
@@ -292,6 +327,24 @@ void Render::update_render_view(App* app, int width, int height)
 
 void Render::draw_pbr(spRenderOptions option)
 {
+    bool is_transparent = option->is_transparent();
+
+    if(render_type == RenderMode::PBR_NON_ALPHA)
+    {
+        if(is_transparent)
+            return;
+    }
+    if(render_type == RenderMode::PBR_ALPHA)
+    {
+        if(is_transparent == false)
+            return;
+    }
+    if(render_type == RenderMode::Z_ALPHA)
+    {
+        if(is_transparent == false)
+            return;
+    }
+   
     auto shader = option->m_shader;
     
     if(shader == nullptr)

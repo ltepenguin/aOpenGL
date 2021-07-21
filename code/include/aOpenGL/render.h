@@ -25,6 +25,8 @@ using spRenderOptionsVec = std::shared_ptr<RenderOptionsVec>;
 class Render
 {
 public:
+    enum class RenderMode{SHADOW, Z_ALPHA, PBR_NON_ALPHA, PBR_ALPHA};
+
     static spRenderOptions    cube();
     static spRenderOptions    sphere();
     static spRenderOptions    plane();
@@ -55,7 +57,7 @@ private:
     /**
      * @brief app manager에서 shadow 그리기 전후로 부를것
      */
-    static void set_shadow_mode(bool use_shadow, int width, int height);
+    static void set_render_mode(Render::RenderMode type, int width, int height);
 
     /**
      * @brief get background color
@@ -80,12 +82,15 @@ private:
 
 private:
     // shadow mode
-    static bool use_shadow;
+    static RenderMode render_type;
 
     // shaders
     static core::Shader* primitive_shader;
     static core::Shader* lbs_shader;
     static core::Shader* shadow_shader;
+    
+    static core::Shader* alpha_primitive_shader;
+    static core::Shader* alpha_lbs_shader;
 
     // shadows
     static unsigned int depth_map_fbo;

@@ -62,6 +62,11 @@ void Mesh::set_materials(const std::vector<Material>& materials)
     m_materials = materials;
 }
 
+std::vector<Material> Mesh::materials()
+{
+    return m_materials;
+}
+
 void Mesh::update_mesh()
 {
     if(m_joints.size() == 0)

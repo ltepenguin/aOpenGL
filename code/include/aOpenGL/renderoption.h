@@ -49,6 +49,9 @@ public:
     spRenderOptions floor_grid(bool);
     spRenderOptions debug(bool);
 
+private:
+    bool is_transparent();
+
 private:   
     friend class Render;
 
@@ -98,6 +101,7 @@ public:
     spRenderOptionsVec roughness(float);
     spRenderOptionsVec texture(std::string, TextureType type = TextureType::kAlbedo, int mid = 0);
     spRenderOptionsVec debug(bool);
+    spRenderOptionsVec alpha(float);
 
 private:
     friend class Render;

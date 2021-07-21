@@ -2,6 +2,7 @@
 #include "aOpenGL/render.h"
 #include "aOpenGL/app.h"
 #include "aOpenGL/image.h"
+#include "aOpenGL/config.h"
 
 #include <iostream>
 #include <glm/gtc/quaternion.hpp>
@@ -146,31 +147,44 @@ void AppManager::start_loop()
         // shadow mode
         {
             // set viewport
-            ::a::gl::Render::set_shadow_mode(true, width, height);
-            ::a::gl::AppManager::app->render();
-            
+            ::a::gl::Render::set_render_mode(Render::RenderMode::SHADOW, width, height);
+            glViewport(0, 0, A_GL_SHADOW_MAP_SIZE, A_GL_SHADOW_MAP_SIZE);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            ::a::gl::AppManager::app->render();            
         }
 
         // render
         {
-            ::a::gl::Render::set_shadow_mode(false, width, height);
-            AppManager::app->render();
+            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_NON_ALPHA, width, height);
+            glViewport(0, 0, width, height);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            ::a::gl::AppManager::app->render();
+        }
+
+        // render alphas
+        {
+            ::a::gl::Render::set_render_mode(Render::RenderMode::Z_ALPHA, width, height);
+            ::a::gl::AppManager::app->render();
+
+            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_ALPHA, width, height);
+            ::a::gl::AppManager::app->render();
         }
 
         // render environment map
         {
-            //::a::gl::Render::background();            
+            //::a::gl::Render::background();
         }
 
         // render xray
-        {          
+        {
+            ::a::gl::Render::set_render_mode(Render::RenderMode::PBR_NON_ALPHA, width, height);
             glClear(GL_DEPTH_BUFFER_BIT);
-            AppManager::app->render_xray();
+            ::a::gl::AppManager::app->render_xray();
         }
         
         // late update
         {
-            AppManager::app->late_update();
+            ::a::gl::AppManager::app->late_update();
         }
 
         // event
