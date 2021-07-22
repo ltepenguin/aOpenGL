@@ -1,4 +1,3 @@
-
 add_library(aOpenGL SHARED 
     # src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app.cpp

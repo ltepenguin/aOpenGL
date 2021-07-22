@@ -148,7 +148,7 @@ void AppManager::start_loop()
         {
             // set viewport
             ::a::gl::Render::set_render_mode(Render::RenderMode::SHADOW, width, height);
-            glViewport(0, 0, A_GL_SHADOW_MAP_SIZE, A_GL_SHADOW_MAP_SIZE);
+            glViewport(0, 0, AGL_SHADOW_MAP_SIZE, AGL_SHADOW_MAP_SIZE);
             glClear(GL_DEPTH_BUFFER_BIT);
             ::a::gl::AppManager::app->render();            
         }

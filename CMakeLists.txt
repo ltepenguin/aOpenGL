@@ -15,9 +15,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 #add_compile_options(-Wno-unused-variable)
 add_compile_options(-fPIC)
 
+# compile option
+add_compile_definitions(AGL_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+
 # set directories
 set(EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
 
 # source codes
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/code)
+
+# example codes
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)

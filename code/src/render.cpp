@@ -200,37 +200,49 @@ static void generate_shadow_buffer(GLuint& fbo, GLuint& shadow_map, int reolusti
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+static std::string absolute_path(const char* path)
+{
+    static const std::string agl_path(AGL_PATH);
+    return agl_path + std::string(path);
+}
+
 void Render::initialize_shaders()
 {
     // pbr shader initialize
-    Render::primitive_shader = new core::Shader(A_GL_PBR_VS, A_GL_PBR_FS);
+    Render::primitive_shader 
+        = new core::Shader(absolute_path(AGL_PBR_VS), absolute_path(AGL_PBR_FS));
     Render::primitive_shader->build();
 
     // lbs shader initialize
-    Render::lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_PBR_FS);
+    Render::lbs_shader 
+        = new core::Shader(absolute_path(AGL_LBS_PBR_VS), absolute_path(AGL_PBR_FS));
     Render::lbs_shader->build();
 
     // pbr shader initialize
-    Render::alpha_primitive_shader = new core::Shader(A_GL_PBR_VS, A_GL_EMPTY_FS);
+    Render::alpha_primitive_shader 
+        = new core::Shader(absolute_path(AGL_PBR_VS), absolute_path(AGL_EMPTY_FS));
     Render::alpha_primitive_shader->build();
 
     // lbs shader initialize
-    Render::alpha_lbs_shader = new core::Shader(A_GL_LBS_PBR_VS, A_GL_EMPTY_FS);
+    Render::alpha_lbs_shader 
+        = new core::Shader(absolute_path(AGL_LBS_PBR_VS), absolute_path(AGL_EMPTY_FS));
     Render::alpha_lbs_shader->build();
 
     // IBL map initialize
-    Render::tocube_shader = new core::Shader(A_GL_TOCUBE_VS, A_GL_TOCUBE_FS);
+    Render::tocube_shader 
+        = new core::Shader(absolute_path(AGL_TOCUBE_VS), absolute_path(AGL_TOCUBE_FS));
     Render::tocube_shader->build();
-    TextureLoader::load_envmap(A_GL_BACKGROUND_HDR_PATH, Render::tocube_shader);
+    TextureLoader::load_envmap(absolute_path(AGL_BACKGROUND_HDR_PATH), Render::tocube_shader);
 
     // background map
-    //Render::background_shader = new Shader(A_GL_BACKGROUND_VS, A_GL_BACKGROUND_FS);
+    //Render::background_shader = new Shader(AGL_BACKGROUND_VS, AGL_BACKGROUND_FS);
     //Render::background_shader->build();
 
     // shader map initialize
-    Render::shadow_shader = new core::Shader(A_GL_SHADOW_VS, A_GL_EMPTY_FS);
+    Render::shadow_shader 
+        = new core::Shader(absolute_path(AGL_SHADOW_VS), absolute_path(AGL_EMPTY_FS));
     Render::shadow_shader->build();
-    generate_shadow_buffer(Render::depth_map_fbo, Render::depth_map_handle, A_GL_SHADOW_MAP_SIZE);
+    generate_shadow_buffer(Render::depth_map_fbo, Render::depth_map_handle, AGL_SHADOW_MAP_SIZE);
 
     // set app render info
     app_render_info = std::make_shared<AppRenderInfo>();
@@ -359,7 +371,7 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
         shader->setInt("u_shadowMap",     1); // shadow
 
         // textures
-        for(int i = 0; i < A_GL_MAX_MATERIAL_TEXTURES; ++i)
+        for(int i = 0; i < AGL_MAX_MATERIAL_TEXTURES; ++i)
         {
             std::string postfix = "[" + std::to_string(i) + "]";
             shader->setInt("u_textures" + postfix, 2 + i); // start from the second
@@ -369,7 +381,8 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
 
     // set environment map
     {   
-        Texture env_map = TextureLoader::load_envmap(A_GL_BACKGROUND_HDR_PATH, Render::tocube_shader);
+        Texture env_map = TextureLoader::load_envmap(
+            absolute_path(AGL_BACKGROUND_HDR_PATH), Render::tocube_shader);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, env_map.handle);
     }
@@ -381,7 +394,7 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
     }
 
     // remove all textures
-    for(int i = 0; i < A_GL_MAX_MATERIAL_TEXTURES; ++i)
+    for(int i = 0; i < AGL_MAX_MATERIAL_TEXTURES; ++i)
     {
         glActiveTexture(GL_TEXTURE2 + i);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -391,16 +404,16 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
     {
         const std::vector<Material>& materials = option->m_materials;
 
-        std::vector<glm::vec4> rgba(A_GL_MAX_MATERIAL_NUM, glm::vec4(1, 1, 1, 1));
-        std::vector<glm::vec3> attribs(A_GL_MAX_MATERIAL_NUM, glm::vec3(0, 0, 0)); // metallic, roughness, none
+        std::vector<glm::vec4> rgba(AGL_MAX_MATERIAL_NUM, glm::vec4(1, 1, 1, 1));
+        std::vector<glm::vec3> attribs(AGL_MAX_MATERIAL_NUM, glm::vec3(0, 0, 0)); // metallic, roughness, none
         
-        std::vector<glm::ivec3> isGS(A_GL_MAX_MATERIAL_NUM, glm::ivec3(0, 0, 0)); // texture uses glossiness / specular
-        std::vector<glm::ivec4> textureID1(A_GL_MAX_MATERIAL_NUM, glm::ivec4(-1, -1, -1, -1));
-        std::vector<glm::ivec3> textureID2(A_GL_MAX_MATERIAL_NUM, glm::ivec3(-1, -1, -1));
+        std::vector<glm::ivec3> isGS(AGL_MAX_MATERIAL_NUM, glm::ivec3(0, 0, 0)); // texture uses glossiness / specular
+        std::vector<glm::ivec4> textureID1(AGL_MAX_MATERIAL_NUM, glm::ivec4(-1, -1, -1, -1));
+        std::vector<glm::ivec3> textureID2(AGL_MAX_MATERIAL_NUM, glm::ivec3(-1, -1, -1));
 
         auto gl_set_texture = [](GLuint handle, int& idx, int& cnt) -> void
         {
-            if((handle == 0) || (cnt >= A_GL_MAX_MATERIAL_TEXTURES))
+            if((handle == 0) || (cnt >= AGL_MAX_MATERIAL_TEXTURES))
             {
                 idx = -1;
                 return;
@@ -415,7 +428,7 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
         int texture_cnt = 0;
         for(int i = 0; i < materials.size(); ++i)
         {
-            if(i >= A_GL_MAX_MATERIAL_NUM) 
+            if(i >= AGL_MAX_MATERIAL_NUM) 
                 break;
           
             const Material& material = materials.at(i);
@@ -435,11 +448,11 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
             gl_set_texture(material.displacement_map.handle, textureID2.at(i).z, texture_cnt);
         }
 
-        shader->setMultipleVec4(      "u_mat_color", A_GL_MAX_MATERIAL_NUM,       &rgba[0]);
-        shader->setMultipleVec3(     "u_mat_attrib", A_GL_MAX_MATERIAL_NUM,    &attribs[0]);
-        shader->setMultipleIvec3(  "u_mat_isGS_txt", A_GL_MAX_MATERIAL_NUM,       &isGS[0]);
-        shader->setMultipleIvec4("u_mat_textureID1", A_GL_MAX_MATERIAL_NUM, &textureID1[0]);
-        shader->setMultipleIvec3("u_mat_textureID2", A_GL_MAX_MATERIAL_NUM, &textureID2[0]);
+        shader->setMultipleVec4(      "u_mat_color", AGL_MAX_MATERIAL_NUM,       &rgba[0]);
+        shader->setMultipleVec3(     "u_mat_attrib", AGL_MAX_MATERIAL_NUM,    &attribs[0]);
+        shader->setMultipleIvec3(  "u_mat_isGS_txt", AGL_MAX_MATERIAL_NUM,       &isGS[0]);
+        shader->setMultipleIvec4("u_mat_textureID1", AGL_MAX_MATERIAL_NUM, &textureID1[0]);
+        shader->setMultipleIvec3("u_mat_textureID2", AGL_MAX_MATERIAL_NUM, &textureID2[0]);
 
         shader->setFloat("u_uv_scale", option->m_uv_repeat);
         shader->setFloat("u_dispMapScale", option->m_disp_map_scale);
