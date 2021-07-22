@@ -12,6 +12,9 @@ NOTE: FBXSDK requires xml2 library
 
 `sudo apt-get install libxml2-dev`
 
+NOTE: OpenGL dependencies
+`sudo apt-get install -y libxrandr-dev `
+
 ## Other Libraries (GLM, GLFW)
 1. Go to the **aOpenGL/ext/[LIBRARY]**
 2. `mkdir build`
