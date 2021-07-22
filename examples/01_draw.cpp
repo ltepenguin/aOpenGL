@@ -29,12 +29,6 @@ public:
             ->scale(0.5)
             ->draw();
 
-        // draw cone
-        agl::Render::cone()
-            ->position(-1.0f, 0.5f, 0)
-            ->scale(0.5)
-            ->draw();
-
         // draw textured sphere 
         agl::Render::sphere()
             ->position(1.0f, 1.0f, 1.0f)
@@ -51,6 +45,13 @@ public:
             ->texture(p_normal, agl::TextureType::kNormal)
             ->texture(p_roughness, agl::TextureType::kRoughness)
             ->texture(p_metallic, agl::TextureType::kMetallic)
+            ->draw();
+        
+        // draw cone
+        agl::Render::cone()
+            ->alpha(0.6f)
+            ->position(-1.0f, 0.5f, 0)
+            ->scale(0.5)
             ->draw();
     }
 };
