@@ -25,3 +25,6 @@ target_link_libraries(interpolate PUBLIC aOpenGL)
 # example 07: stitching
 add_executable(stitching ${CMAKE_CURRENT_SOURCE_DIR}/07_stitching.cpp)
 target_link_libraries(stitching PUBLIC aOpenGL)
+
+add_executable(test ${CMAKE_CURRENT_SOURCE_DIR}/08_test.cpp)
+target_link_libraries(test PUBLIC aOpenGL)
