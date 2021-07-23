@@ -24,6 +24,7 @@ class MyApp : public agl::App
 {
 public:
     agl::spModel model;
+    agl::spModel modelA, modelB;
     agl::Motion  motion;
 
     agl::Pose pose_a, pose_b;
@@ -41,6 +42,11 @@ public:
 
         pose_a = motion.poses.at(0);
         pose_b = motion.poses.back();
+
+        modelA = model->copy();
+        modelB = model->copy();
+        modelA->set_pose(pose_a);
+        modelB->set_pose(pose_b);
     }
 
     int frame = 0;
@@ -62,6 +68,8 @@ public:
             ->draw();
         
         agl::Render::model(model)->draw();
+        agl::Render::model(modelA)->alpha(0.5)->draw();
+        agl::Render::model(modelB)->alpha(0.5)->draw();
     }
 
     void key_callback(char key, int action) override
