@@ -10,7 +10,7 @@ static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, f
             pose_a.local_rotations[i].slerp(weight_a, pose_b.local_rotations[i])
         );
     }
-    newPose.root_position = pose_a.root_position * weight_a + pose_b.root_position * (1 - weight_a);
+    newPose.root_position = pose_a.root_position * (1 - weight_a) + pose_b.root_position * weight_a;
     return newPose;
     // ----------------------------------------------------------------- //
 
