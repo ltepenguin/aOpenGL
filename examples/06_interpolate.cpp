@@ -4,13 +4,19 @@
 static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, float weight_a)
 {
     // TODO: Interpolate pose_a and pose_b ----------------------------- //
-    //
-    //
+    agl::Pose newPose;
+    for(int i=0 ; i<pose_a.local_rotations.size() ; i++){
+        newPose.local_rotations.push_back(
+            pose_a.local_rotations[i].slerp(weight_a, pose_b.local_rotations[i])
+        );
+    }
+    newPose.root_position = pose_a.root_position * weight_a + pose_b.root_position * (1 - weight_a);
+    return newPose;
     // ----------------------------------------------------------------- //
 
     // Dummy code ------------------------------------------------------ //
-    agl::Pose pose = pose_a;
-    return pose;
+    // agl::Pose pose = pose_b;
+    // return pose;
     // ----------------------------------------------------------------- //
 }
 
@@ -41,6 +47,7 @@ public:
     void update() override
     {
         float weight = (frame % 300) / 300.0f;
+        std::cout << weight << std::endl;
         auto pose = interpolate(pose_a, pose_b, weight);
         model->set_pose(pose);
         frame++;
