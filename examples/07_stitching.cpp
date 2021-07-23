@@ -6,14 +6,34 @@ static std::vector<agl::Pose> stitch(
     const std::vector<agl::Pose>& poses_b)
 {
     // TODO: Stitch two motions ---------------------------------------- //
-    //
-    //
+    std::vector<agl::Pose> new_poses = poses_a;
+    
+    Vec3 v3 = poses_a.back().root_position;
+    float x = v3.x();
+    float y = v3.y();
+    float z = v3.z();
+
+    Vec3 last_root_pos = Vec3(x, 0, z);
+    Quat last_root_orient = poses_a.back().local_rotations[0];
+
+    for(int i=0 ; i<poses_b.size() ; i++){
+        agl::Pose newPose = poses_b[i];
+        
+        // Add last root position to poses_b
+        newPose.root_position += last_root_pos;
+        newPose.local_rotations[0] = Quat(1, 0, 0, 0);
+        new_poses.push_back(newPose);
+    }
+
+
+    return new_poses;
+
     // ----------------------------------------------------------------- //
     
     // Dummy code ------------------------------------------------------ //
-    std::vector<agl::Pose> new_poses = poses_a;
-    new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
-    return new_poses;
+    // std::vector<agl::Pose> new_poses = poses_a;
+    // new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
+    // return new_poses;
     // ----------------------------------------------------------------- //
 }
 
