@@ -15,13 +15,23 @@ static std::vector<agl::Pose> stitch(
 
     Vec3 last_root_pos = Vec3(x, 0, z);
     Quat last_root_orient = poses_a.back().local_rotations[0];
+    
+    // Compute inverse of first orientation of poses_b
+    Quat inverse = poses_b[0].local_rotations[0].inverse();
 
     for(int i=0 ; i<poses_b.size() ; i++){
         agl::Pose newPose = poses_b[i];
         
-        // Add last root position to poses_b
+        // Rotate root position vector to desired orientation
+        newPose.root_position = last_root_orient * inverse * newPose.root_position;
+        // Then translate the position
         newPose.root_position += last_root_pos;
-        newPose.local_rotations[0] = Quat(1, 0, 0, 0);
+
+        // Multiply inverse of first orientation
+        // Then rotate by last root orientation of poses_a
+        // Changing the base orientation to last frame of poses_a
+        newPose.local_rotations[0] = last_root_orient * inverse * poses_b[i].local_rotations[0];
+
         new_poses.push_back(newPose);
     }
 
@@ -58,6 +68,15 @@ public:
         model    = model_fbx.model();
         motion_a = motion_a_fbx.motion(model).at(0);
         motion_b = motion_b_fbx.motion(model).at(0);
+
+        // Rotate motion by 90 degrees
+        Quat dq(AAxis(M_PI * 0.5f, Vec3::UnitY()));
+        for(auto& pose : motion_a.poses)
+        {
+            pose.root_position = dq * pose.root_position;
+            pose.local_rotations.at(0) = dq * pose.local_rotations.at(0);
+        }
+
 
         stitched = stitch(motion_a.poses, motion_b.poses);
     }
