@@ -1,5 +1,5 @@
 #include "aOpenGL/image.h"
-#include <sys/stat.h>
+#include "aOpenGL/file.h"
 #include <iostream>
 
 #pragma warning(push, 0)
@@ -14,12 +14,6 @@
 #pragma warning(pop)
 
 namespace a::gl {
-
-static bool file_check(const std::string& name)
-{
-    struct stat buffer;
-    return (stat (name.c_str(), &buffer) == 0); 
-}
 
 Image::Image()
 {}

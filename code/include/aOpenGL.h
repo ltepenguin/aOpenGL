@@ -4,6 +4,7 @@
 #include "aOpenGL/camera.h"
 #include "aOpenGL/eigentype.h"
 #include "aOpenGL/fbx.h"
+#include "aOpenGL/file.h"
 #include "aOpenGL/ik.h"
 #include "aOpenGL/image.h"
 #include "aOpenGL/joint.h"
