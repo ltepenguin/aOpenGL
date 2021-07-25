@@ -72,3 +72,7 @@ target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/fbxsdk/include)
 target_link_libraries(aOpenGL PUBLIC ${GLFW})
 target_link_libraries(aOpenGL PUBLIC ${FBXSDK} ${XML2})
 target_link_libraries(aOpenGL PUBLIC ${CMAKE_DL_LIBS})
+
+export(
+    TARGETS aOpenGL 
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/../aOpenGLConfig.cmake)
