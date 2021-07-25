@@ -27,6 +27,11 @@ add_library(aOpenGL SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Cubesphere.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Cylinder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Sphere.cpp
+
+    # kinematics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinmodel.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinmotion.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinpose.cpp
     
     # fbx parser
     ${CMAKE_CURRENT_SOURCE_DIR}/src/fbx/fbx_animation.cpp
