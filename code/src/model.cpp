@@ -189,6 +189,11 @@ const std::vector<spJoint> Model::joints(const std::vector<std::string>& names) 
     return results;
 }
 
+int Model::joint_idx(const std::string& name) const
+{
+    return m_jnt_name_to_idx.at(name);
+}
+
 void Model::set_pose(const Pose& pose)
 {
     assert(pose.local_rotations.size() == m_joints.size());
@@ -210,6 +215,19 @@ void Model::set_pose(const Pose& pose, const std::vector<std::string>& names)
     {
         int idx = m_jnt_name_to_idx.at(names.at(i));
         m_joints.at(idx)->set_local_rot(pose.local_rotations.at(idx));
+    }
+    
+    this->root()->update_world_trf_children();
+}
+
+void Model::set_pose(const KinPose& pose, const std::vector<std::string>& names)
+{
+    this->root()->set_local_pos(pose.local_T0);
+
+    for(int i = 0; i < (int)names.size(); ++i)
+    {
+        int idx = m_jnt_name_to_idx.at(names.at(i));
+        m_joints.at(idx)->set_local_rot(pose.local_Rs.at(i));
     }
     
     this->root()->update_world_trf_children();

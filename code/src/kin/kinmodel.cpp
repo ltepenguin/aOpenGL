@@ -56,14 +56,17 @@ spKinModel kinmodel(const spModel& model, const std::vector<std::string>& jnt_na
     std::vector<Mat4>          pre_trfs;
     std::map<std::string, int> jnt_name_to_idx;
     std::vector<int>           parent_idxes;
+    std::vector<int>           gl_jnt_idxes;
     pre_trfs.reserve(noj);
     parent_idxes.reserve(noj);
+    gl_jnt_idxes.reserve(noj);
 
     for(int i = 0; i < noj; ++i)
     {
         auto& jnt = joints.at(i);
         pre_trfs.push_back(jnt->pre_trf());
         jnt_name_to_idx[jnt->name()] = i;
+        gl_jnt_idxes.push_back(model->joint_idx(jnt->name()));
     }
 
     for(int i = 0; i < noj; ++i)
@@ -101,6 +104,7 @@ spKinModel kinmodel(const spModel& model, const std::vector<std::string>& jnt_na
     kmodel->parent_idxes    = parent_idxes;
     kmodel->fk_order        = fk_order;
     kmodel->jnt_name_to_idx = jnt_name_to_idx;
+    kmodel->gl_jnt_idxes    = gl_jnt_idxes;
     return kmodel;
 }
 

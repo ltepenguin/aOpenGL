@@ -27,7 +27,6 @@ struct KinPose
     void set_world_baseTrf(const Mat4& tar_baseTrf);
     void set_world_baseTrf(const Mat4& cur_baseTrf, const Mat4& tar_baseTrf);
 
-    // variables
     // ! 이 정보들은 바로 수정하지 말것!
     Mat4                world_baseTrf;
     std::vector<Mat4>   world_trfs;

@@ -18,6 +18,7 @@ struct KinModel : public std::enable_shared_from_this<KinModel>
     std::vector<int>            parent_idxes;   // jnt_names order.
     std::vector<int>            fk_order;       // fk computation order, 각 값은 joint index
     std::map<std::string, int>  jnt_name_to_idx;
+    std::vector<int>            gl_jnt_idxes;   // agl::model에서 joint의 index
 
     /**
      * @brief           Forward Kinematics

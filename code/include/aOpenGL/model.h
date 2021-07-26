@@ -2,6 +2,7 @@
 #include "eigentype.h"
 #include "material.h"
 #include "motion.h"
+#include "kin/kinpose.h"
 #include <memory>
 #include <map>
 
@@ -69,9 +70,12 @@ public:
     const spJoint               joint(int jidx) const;
     std::vector<spJoint>        joints(const std::vector<std::string>& names);
     const std::vector<spJoint>  joints(const std::vector<std::string>& names) const;
+    int                         joint_idx(const std::string& name) const;
 
     void                        set_pose(const Pose& pose); // pose와 m_joints의 정보 순서가 반드시 같아야 함.
     void                        set_pose(const Pose& pose, const std::vector<std::string>& names);
+
+    void                        set_pose(const KinPose& pose, const std::vector<std::string>& names);
 
     // 현재 pose의 rotation 값들을 pre transformation 에 저장.
     void                        set_current_pose_identity_rot();
