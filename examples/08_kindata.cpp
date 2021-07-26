@@ -38,8 +38,8 @@ public:
         
         kmodel = agl::kinmodel(model, joint_names);
         kmotion = agl::kinmotion(kmodel, motions);
-        kmotion->init_world_baseTrf_from_shoulders(left_shoulder, right_shoulder);
-        kmotion->apply_baseTrf_filter(3);
+        kmotion->init_world_basisTrf_from_shoulders(left_shoulder, right_shoulder);
+        kmotion->apply_basisTrf_filter(3);
     }
 
     int frame = 0;
@@ -61,7 +61,7 @@ public:
                 ->color(1, 0, 0)->scale(0.05f)->draw();
         }
 
-        agl::Render::cube()->transform(kpose.world_baseTrf)
+        agl::Render::cube()->transform(kpose.world_basisTrf)
             ->scale(0.1f)->color(0, 1, 0)->draw();
 
         agl::Render::plane()->scale(10.0f)->draw();

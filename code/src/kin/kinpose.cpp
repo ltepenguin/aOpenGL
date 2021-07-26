@@ -9,31 +9,31 @@ void KinPose::add(const KinDisp& disp, const spKinModel& kmodel)
     kin::add_displacement(*this, disp, kmodel);
 }
 
-void KinPose::init_world_baseTrf_from_shoulders(int Ridx, int Lidx)
+void KinPose::init_world_basisTrf_from_shoulders(int Ridx, int Lidx)
 {
-    kin::init_world_baseTrf_from_shoulders(*this, Ridx, Lidx);
+    kin::init_world_basisTrf_from_shoulders(*this, Ridx, Lidx);
 }
 
-void KinPose::set_world_baseTrf(const Mat4& tar_baseTrf)
+void KinPose::set_world_basisTrf(const Mat4& tar_basisTrf)
 {
-    kin::set_world_baseTrf(*this, tar_baseTrf);
+    kin::set_world_basisTrf(*this, tar_basisTrf);
 }
 
-void KinPose::set_world_baseTrf(const Mat4& cur_baseTrf, const Mat4& tar_baseTrf)
+void KinPose::set_world_basisTrf(const Mat4& cur_basisTrf, const Mat4& tar_basisTrf)
 {
-    kin::set_world_baseTrf(*this, cur_baseTrf, tar_baseTrf);
+    kin::set_world_basisTrf(*this, cur_basisTrf, tar_basisTrf);
 }
 
 KinDisp::KinDisp(const KinPose& p0, const KinPose& p1)
 {
     KinPose p1copy = p1;
-    kin::set_world_baseTrf(p1copy, p1copy.world_baseTrf, p0.world_baseTrf);
+    kin::set_world_basisTrf(p1copy, p1copy.world_basisTrf, p0.world_basisTrf);
 
     int noj = p0.local_Rs.size();
 
-    // set baseTrf
+    // set basisTrf
     {
-        this->world_baseTrf = p0.world_baseTrf;
+        this->world_basisTrf = p0.world_basisTrf;
     }
     
     // set translation
@@ -52,9 +52,9 @@ KinDisp::KinDisp(const KinPose& p0, const KinPose& p1)
     }
 }
 
-void KinDisp::set_world_baseTrf(const Mat4& tar_baseTrf)
+void KinDisp::set_world_basisTrf(const Mat4& tar_basisTrf)
 {
-    kin::set_world_baseTrf(*this, tar_baseTrf);
+    kin::set_world_basisTrf(*this, tar_basisTrf);
 }
 
 namespace kin {
@@ -69,7 +69,7 @@ void add_displacement(KinPose& self, const KinDisp& disp, const spKinModel& kmod
     assert(w >= 0.0f);
 
     KinDisp disp_copy = disp;
-    kin::set_world_baseTrf(disp_copy, self.world_baseTrf);
+    kin::set_world_basisTrf(disp_copy, self.world_basisTrf);
     
     int noj = self.local_Rs.size();
 
@@ -105,7 +105,7 @@ void add_displacement(KinPose& self, const KinDisp& disp, const spKinModel& kmod
     }
 }
 
-void init_world_baseTrf_from_shoulders(KinPose& self, int Ridx, int Lidx)
+void init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx)
 {
     Vec3 root_x = self.world_trfs.at(0).col(0).head<3>();
     root_x.y() = 0;
@@ -119,42 +119,42 @@ void init_world_baseTrf_from_shoulders(KinPose& self, int Ridx, int Lidx)
     shl_x.normalize();    
     
     // average
-    Vec3 baseX = (shl_x + root_x).normalized();
-    Vec3 baseZ = baseX.cross(Vec3::UnitY());
+    Vec3 basisX = (shl_x + root_x).normalized();
+    Vec3 basisZ = basisX.cross(Vec3::UnitY());
     
     // set orientation
-    self.world_baseTrf.block<3, 1>(0, 0) = baseX;
-    self.world_baseTrf.block<3, 1>(0, 1) = Vec3::UnitY();
-    self.world_baseTrf.block<3, 1>(0, 2) = baseZ;
+    self.world_basisTrf.block<3, 1>(0, 0) = basisX;
+    self.world_basisTrf.block<3, 1>(0, 1) = Vec3::UnitY();
+    self.world_basisTrf.block<3, 1>(0, 2) = basisZ;
 
     // set position
     Vec3 shoulder_pos = 0.5f * (Rp + Lp).block<3, 1>(0, 0);
-    Vec3 base_pos = self.world_baseTrf.col(3).head<3>();
-    Vec3 T  = 0.5f * (base_pos + shoulder_pos);
+    Vec3 basis_pos = self.world_basisTrf.col(3).head<3>();
+    Vec3 T  = 0.5f * (basis_pos + shoulder_pos);
     T.y() = 0.0f;
-    self.world_baseTrf.block<3, 1>(0, 3) = T;
+    self.world_basisTrf.block<3, 1>(0, 3) = T;
 }
 
-void set_world_baseTrf(KinPose& self, const Mat4& tar_baseTrf)
+void set_world_basisTrf(KinPose& self, const Mat4& tar_basisTrf)
 {
-    set_world_baseTrf(self, self.world_baseTrf, tar_baseTrf);
+    set_world_basisTrf(self, self.world_basisTrf, tar_basisTrf);
 }
 
-void set_world_baseTrf(KinDisp& self, const Mat4& tar_baseTrf)
+void set_world_basisTrf(KinDisp& self, const Mat4& tar_basisTrf)
 {
-    Mat3 curR = self.world_baseTrf.block<3, 3>(0, 0);
-    Mat3 tarR = tar_baseTrf.block<3, 3>(0, 0);
+    Mat3 curR = self.world_basisTrf.block<3, 3>(0, 0);
+    Mat3 tarR = tar_basisTrf.block<3, 3>(0, 0);
     Mat3 dR = tarR * curR.inverse();
     self.local_T0 = dR * self.local_T0;
 
     self.local_Rs.at(0).block<3, 3>(0, 0) = dR * self.local_Rs.at(0).block<3, 3>(0, 0) * dR.inverse();
-    self.world_baseTrf = tar_baseTrf;
+    self.world_basisTrf = tar_basisTrf;
 }
 
-void set_world_baseTrf(KinPose& self, const Mat4& cur_baseTrf, const Mat4& tar_baseTrf)
+void set_world_basisTrf(KinPose& self, const Mat4& cur_basisTrf, const Mat4& tar_basisTrf)
 {
-    Mat4 inv_btrf = cur_baseTrf.inverse();
-    Mat4 d_trf = tar_baseTrf * inv_btrf;
+    Mat4 inv_btrf = cur_basisTrf.inverse();
+    Mat4 d_trf = tar_basisTrf * inv_btrf;
     for(auto& wtrf : self.world_trfs)
     {
         wtrf = d_trf * wtrf;
@@ -165,7 +165,7 @@ void set_world_baseTrf(KinPose& self, const Mat4& cur_baseTrf, const Mat4& tar_b
     
     self.local_Rs.at(0).block<3, 3>(0, 0) = R0.block<3, 3>(0, 0);
     self.local_T0 = rootT.head<3>();
-    self.world_baseTrf = tar_baseTrf;
+    self.world_basisTrf = tar_basisTrf;
 }
 
 }}

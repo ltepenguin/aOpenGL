@@ -23,7 +23,7 @@ static std::vector<KinPose> _get_poses(const spKinModel& kmodel,
             );
         }
         pose.world_trfs = kin::compute_fk(kmodel, pose.local_T0, pose.local_Rs);
-        pose.world_baseTrf = pose.world_trfs.at(0);
+        pose.world_basisTrf = pose.world_trfs.at(0);
         poses.push_back(std::move(pose));
     }
     
@@ -121,16 +121,16 @@ bool KinMotion::is_same_motion(int pidx0, int pidx1)
     return kin::is_same_motion(shared_from_this(), pidx0, pidx1);
 }
 
-void KinMotion::apply_baseTrf_filter(int filter_size)
+void KinMotion::apply_basisTrf_filter(int filter_size)
 {
     spKinMotion kmotion = shared_from_this();
-    return kin::apply_baseTrf_filter(kmotion, filter_size);
+    return kin::apply_basisTrf_filter(kmotion, filter_size);
 }
 
-void KinMotion::init_world_baseTrf_from_shoulders(const std::string& Rshl, const std::string& Lshl)
+void KinMotion::init_world_basisTrf_from_shoulders(const std::string& Rshl, const std::string& Lshl)
 {
     spKinMotion kmotion = shared_from_this();
-    return kin::init_world_baseTrf_from_shoulders(kmotion, Rshl, Lshl);
+    return kin::init_world_basisTrf_from_shoulders(kmotion, Rshl, Lshl);
 }
 
 int KinMotion::get_pidx(const std::string& take_name, int fbx_frame, int fbx_fps)
@@ -159,17 +159,17 @@ bool is_same_motion(const spKinMotion& kmotion, int pidx0, int pidx1)
 }
 
 // filter's window size: filter_size * 2 + 1
-void apply_baseTrf_filter(spKinMotion& kmotion, int filter_size)
+void apply_basisTrf_filter(spKinMotion& kmotion, int filter_size)
 {
-    // smooth base orientations
+    // smooth basis orientations
     auto& poses = kmotion->poses;
     int pidx_n = poses.size();
 
     // smooth
-    std::vector<Vec3> baseZs;
-    std::vector<Vec3> baseTs;
-    baseZs.reserve(pidx_n);
-    baseTs.reserve(pidx_n);
+    std::vector<Vec3> basisZs;
+    std::vector<Vec3> basisTs;
+    basisZs.reserve(pidx_n);
+    basisTs.reserve(pidx_n);
     for(int pidx = 0; pidx < pidx_n; ++pidx)
     {
         int cnt = 0;
@@ -184,8 +184,8 @@ void apply_baseTrf_filter(spKinMotion& kmotion, int filter_size)
             if(is_same_motion(kmotion, pidx, pidx + j) == false)
                 continue;
             
-            v4 += poses.at(pidx + j).world_baseTrf.col(2);
-            T4 += poses.at(pidx + j).world_baseTrf.col(3);
+            v4 += poses.at(pidx + j).world_basisTrf.col(2);
+            T4 += poses.at(pidx + j).world_basisTrf.col(3);
             cnt++;
         }
 
@@ -197,41 +197,41 @@ void apply_baseTrf_filter(spKinMotion& kmotion, int filter_size)
             if(is_same_motion(kmotion, pidx, pidx - j) == false)
                 continue;
             
-            v4 += poses.at(pidx - j).world_baseTrf.col(2);
-            T4 += poses.at(pidx - j).world_baseTrf.col(3);
+            v4 += poses.at(pidx - j).world_basisTrf.col(2);
+            T4 += poses.at(pidx - j).world_basisTrf.col(3);
             cnt++;
         }
         assert(cnt > 0);
 
         v4 = v4 / cnt;
         T4 = T4 / cnt;
-        baseZs.push_back(Vec3(v4.x(), v4.y(), v4.z()));
-        baseTs.push_back(Vec3(T4.x(), T4.y(), T4.z()));
+        basisZs.push_back(Vec3(v4.x(), v4.y(), v4.z()));
+        basisTs.push_back(Vec3(T4.x(), T4.y(), T4.z()));
     }
 
-    // recompute base orient
+    // recompute basis orient
     for(int i = 0; i < pidx_n; ++i)
     {
-        Vec3 baseX = Vec3::UnitY().cross(baseZs.at(i));
+        Vec3 basisX = Vec3::UnitY().cross(basisZs.at(i));
 
         auto& pose = poses.at(i);
-        pose.world_baseTrf.block<3, 1>(0, 0) = baseX.normalized();
-        pose.world_baseTrf.block<3, 1>(0, 1) = Vec3::UnitY();
-        pose.world_baseTrf.block<3, 1>(0, 2) = baseZs.at(i).normalized();
-        pose.world_baseTrf.block<3, 1>(0, 3) = baseTs.at(i);
+        pose.world_basisTrf.block<3, 1>(0, 0) = basisX.normalized();
+        pose.world_basisTrf.block<3, 1>(0, 1) = Vec3::UnitY();
+        pose.world_basisTrf.block<3, 1>(0, 2) = basisZs.at(i).normalized();
+        pose.world_basisTrf.block<3, 1>(0, 3) = basisTs.at(i);
     }
 }
 
-void init_world_baseTrf_from_shoulders(spKinMotion& self, const std::string& Rshl, const std::string& Lshl)
+void init_world_basisTrf_from_shoulders(spKinMotion& self, const std::string& Rshl, const std::string& Lshl)
 {
     // find right & left shoulder index
     int Ridx = self->kmodel->jnt_name_to_idx.at(Rshl);
     int Lidx = self->kmodel->jnt_name_to_idx.at(Lshl);
 
-    // set base
+    // set basis
     for(KinPose& pose : self->poses)
     {
-        init_world_baseTrf_from_shoulders(pose, Ridx, Lidx);
+        init_world_basisTrf_from_shoulders(pose, Ridx, Lidx);
     }
 }
 // get pidx

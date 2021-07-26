@@ -26,8 +26,8 @@ struct KinMotion : public std::enable_shared_from_this<KinMotion>
 
     // functions
     bool is_same_motion(int pidx0, int pidx1);
-    void apply_baseTrf_filter(int filter_size = 3);
-    void init_world_baseTrf_from_shoulders(const std::string& Rshl, const std::string& Lshl);
+    void apply_basisTrf_filter(int filter_size = 3);
+    void init_world_basisTrf_from_shoulders(const std::string& Rshl, const std::string& Lshl);
     int  get_pidx(const std::string& take_name, int fbx_frame, int fbx_fps);
     int  get_pidx(int mid, float time);
 };
@@ -45,10 +45,10 @@ namespace kin {
 bool is_same_motion(const spKinMotion& kmotion, int pidx0, int pidx1);
 
 // filter's window size: filter_size * 2 + 1
-void apply_baseTrf_filter(spKinMotion& kmotion, int filter_size = 3);
+void apply_basisTrf_filter(spKinMotion& kmotion, int filter_size = 3);
 
 // set baseTrf using shoulder joints
-void init_world_baseTrf_from_shoulders(spKinMotion& self, const std::string& Rshl, const std::string& Lshl);
+void init_world_basisTrf_from_shoulders(spKinMotion& self, const std::string& Rshl, const std::string& Lshl);
 
 // get pidx
 int get_pidx(const spKinMotion& kmotion, const std::string& take_name, int fbx_frame, int fbx_fps);

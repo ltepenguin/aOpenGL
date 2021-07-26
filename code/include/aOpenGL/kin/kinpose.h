@@ -23,12 +23,12 @@ struct KinPose
 
     // functions
     void add(const KinDisp& disp, const spKinModel& kmodel);
-    void init_world_baseTrf_from_shoulders(int Ridx, int Lidx); // initialize baseTrf using shoulder joints
-    void set_world_baseTrf(const Mat4& tar_baseTrf);
-    void set_world_baseTrf(const Mat4& cur_baseTrf, const Mat4& tar_baseTrf);
+    void init_world_basisTrf_from_shoulders(int Ridx, int Lidx); // initialize baseTrf using shoulder joints
+    void set_world_basisTrf(const Mat4& tar_basis);
+    void set_world_basisTrf(const Mat4& cur_basis, const Mat4& tar_basis);
 
     // ! 이 정보들은 바로 수정하지 말것!
-    Mat4                world_baseTrf;
+    Mat4                world_basisTrf;
     std::vector<Mat4>   world_trfs;
     
     Vec3                local_T0;
@@ -61,10 +61,10 @@ struct KinDisp
     KinDisp& operator=(const KinDisp&)  = default;
     KinDisp& operator=(KinDisp&&)       = default;
 
-    void set_world_baseTrf(const Mat4& tar_baseTrf);
+    void set_world_basisTrf(const Mat4& tar_basis);
 
     // variables
-    Mat4                world_baseTrf;
+    Mat4                world_basisTrf;
     Vec3                local_T0;
     std::vector<Mat4>   local_Rs;
 
@@ -85,10 +85,10 @@ namespace kin {
 KinDisp     displacement(const KinPose& p0, const KinPose& p1);
 void        add_displacement(KinPose& self, const KinDisp& disp, const spKinModel& kmodel, float w = 1.0f);
 
-void        init_world_baseTrf_from_shoulders(KinPose& self, int Ridx, int Lidx); // initialize baseTrf using shoulder joints
-void        set_world_baseTrf(KinPose& self, const Mat4& tar_baseTrf);
-void        set_world_baseTrf(KinDisp& self, const Mat4& tar_baseTrf);
-void        set_world_baseTrf(KinPose& self, const Mat4& cur_baseTrf, const Mat4& tar_baseTrf);
+void        init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx); // initialize basis using shoulder joints
+void        set_world_basisTrf(KinPose& self, const Mat4& tar_basis);
+void        set_world_basisTrf(KinDisp& self, const Mat4& tar_basis);
+void        set_world_basisTrf(KinPose& self, const Mat4& cur_basis, const Mat4& tar_basis);
 
 }
 }
