@@ -314,25 +314,6 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
 {
     if(shader == nullptr)
         return;
-    //bool is_transparent = option->is_transparent();
-
-    // if(render_type == RenderMode::PBR_NON_ALPHA)
-    // {
-    //     if(is_transparent)
-    //         return;
-    // }
-    // if(render_type == RenderMode::PBR_ALPHA)
-    // {
-    //     if(is_transparent == false)
-    //         return;
-    // }
-    // if(render_type == RenderMode::Z_ALPHA)
-    // {
-    //     if(is_transparent == false)
-    //         return;
-    // }
-   
-    //auto shader = option->m_shader;
     
     if(shader == nullptr)
         return;
@@ -472,7 +453,6 @@ void Render::draw_shadow(spRenderOptions option, core::Shader* shader)
 {
     if(shader == nullptr)
         return;
-    //auto shader = option->m_shader;
     
     if(shader == nullptr) 
         return;

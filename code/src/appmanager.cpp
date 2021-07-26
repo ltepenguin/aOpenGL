@@ -73,7 +73,6 @@ void AppManager::start_loop()
     }
     
     const char* title = "app";
-    //auto window = glfwCreateWindow(1280, 720, title, nullptr, nullptr);
     auto window = glfwCreateWindow(app->width(), app->height(), title, nullptr, nullptr);
     if(!window)
         throw std::runtime_error {
@@ -110,7 +109,6 @@ void AppManager::start_loop()
     // initialize all the shaders
     {
         ::a::gl::Render::initialize_shaders();
-        //::a::gl::Render::shadow_init(AppManager::app);
         glViewport(0, 0, app->width(), app->height());
     }
 
