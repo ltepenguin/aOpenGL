@@ -86,6 +86,13 @@ public:
     {
         model->set_pose(stitched.at(frame));
         frame = (frame + 1) % stitched.size();
+
+        //cam.set_position(Vec3);
+        //cam.set_focus(Vec3);
+        agl::spJoint root = model->joint(0);
+        Vec3 pos = root->world_pos();
+        pos.y() = 1.0f;
+        this->camera().set_focus(pos);
     }
 
     void render() override
