@@ -54,6 +54,7 @@ public:
     agl::Motion             motion_a;
     agl::Motion             motion_b;
     std::vector<agl::Pose>  stitched;
+    Vec3 cam_offset;
 
     void start()
     {       
@@ -79,7 +80,14 @@ public:
 
 
         stitched = stitch(motion_a.poses, motion_b.poses);
+
+        cam_offset = 2.0f * Vec3(0.0f, 3.0f, 3.0f);
+        std::cout << cam_offset << std::endl;
+
     }
+
+    
+    //Mat4 basis = Mat4::Identity();
 
     int frame = 0;
     void update() override
@@ -87,16 +95,42 @@ public:
         model->set_pose(stitched.at(frame));
         frame = (frame + 1) % stitched.size();
 
-        //cam.set_position(Vec3);
-        //cam.set_focus(Vec3);
         agl::spJoint root = model->joint(0);
+        Vec3 focus = root->world_pos();
+        focus.y() = 1.0f;
+
         Vec3 pos = root->world_pos();
-        pos.y() = 1.0f;
-        this->camera().set_focus(pos);
+        pos = pos + cam_offset;
+        pos.y() = 2.0f;
+
+        camera().set_position(pos);
+        camera().set_focus(focus);
+
+        /* Projecting root to floor
+        Vec3 basis_pos = root->world_pos();
+        basis_pos.y() = 0.0f;
+        basis.col(3).head<3>() = basis_pos;
+
+        Mat3 root_rot = model->joint(0)->world_rot_mat();
+        Vec3 root_dir = root_rot * Vec3(0, 0, 1); // = root_rot.col(2)
+        root_dir.y() = 0.0f;
+        
+        Vec3 basis_z_axis = root_dir.normalized();
+        Vec3 basis_y_axis = Vec3(0, 1, 0);
+        Vec3 basis_x_axis = basis_y_axis.cross(basis_z_axis);
+        basis.col(0).head<3>() = basis_x_axis;
+        basis.col(1).head<3>() = basis_y_axis;
+        basis.col(2).head<3>() = basis_z_axis;
+        */
+        
+        
     }
 
     void render() override
     {
+        Vec3 z_dir = model->root()->world_rot_mat().col(2);
+
+
         agl::Render::plane()
             ->scale(15.0f)
             ->floor_grid(true)
@@ -104,6 +138,10 @@ public:
             ->draw();
         
         agl::Render::model(model)->draw();
+
+        // agl::Render::cube()
+        //     ->transform(basis)
+        //     ->draw();
     }
 
     void key_callback(char key, int action) override
