@@ -18,6 +18,7 @@ struct KinMotion : public std::enable_shared_from_this<KinMotion>
     
     // motion 관련 정보
     std::vector<int>           start_pidxes;      // 각 motion들의 시작 pidx
+    int                        motion_n;          // number of motions
     
     // motion 추가 정보들 (optional)
     std::vector<std::string>   motion_names;      // 각 motion들의 name

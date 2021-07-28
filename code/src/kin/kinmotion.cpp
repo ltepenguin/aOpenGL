@@ -96,9 +96,12 @@ spKinMotion kinmotion(const spKinModel& kmodel,
         kmotion->motion_ids.insert(
             std::end(kmotion->motion_ids), std::begin(mid_i), std::end(mid_i)
             );
+
+        kmotion->motion_names.push_back(motions.at(i).name);
         kmotion->fbx_start_times.push_back(motions.at(i).start_time);
         kmotion->fbx_end_times.push_back(motions.at(i).end_time);
     }
+    kmotion->motion_n = nom;
     
     return kmotion;
 }
