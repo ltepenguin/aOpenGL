@@ -4,13 +4,19 @@
 static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, float weight_a)
 {
     // TODO: Interpolate pose_a and pose_b ----------------------------- //
-    //
-    //
+    agl::Pose newPose;
+    for(int i=0 ; i<pose_a.local_rotations.size() ; i++){
+        newPose.local_rotations.push_back(
+            pose_a.local_rotations[i].slerp(weight_a, pose_b.local_rotations[i])
+        );
+    }
+    newPose.root_position = pose_a.root_position * (1 - weight_a) + pose_b.root_position * weight_a;
+    return newPose;
     // ----------------------------------------------------------------- //
 
     // Dummy code ------------------------------------------------------ //
-    agl::Pose pose = pose_a;
-    return pose;
+    // agl::Pose pose = pose_b;
+    // return pose;
     // ----------------------------------------------------------------- //
 }
 
@@ -18,6 +24,7 @@ class MyApp : public agl::App
 {
 public:
     agl::spModel model;
+    agl::spModel modelA, modelB;
     agl::Motion  motion;
 
     agl::Pose pose_a, pose_b;
@@ -35,12 +42,18 @@ public:
 
         pose_a = motion.poses.at(0);
         pose_b = motion.poses.back();
+
+        modelA = model->copy();
+        modelB = model->copy();
+        modelA->set_pose(pose_a);
+        modelB->set_pose(pose_b);
     }
 
     int frame = 0;
     void update() override
     {
         float weight = (frame % 300) / 300.0f;
+        std::cout << weight << std::endl;
         auto pose = interpolate(pose_a, pose_b, weight);
         model->set_pose(pose);
         frame++;
@@ -55,6 +68,8 @@ public:
             ->draw();
         
         agl::Render::model(model)->draw();
+        agl::Render::model(modelA)->alpha(0.5)->draw();
+        agl::Render::model(modelB)->alpha(0.5)->draw();
     }
 
     void key_callback(char key, int action) override

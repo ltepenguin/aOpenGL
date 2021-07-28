@@ -6,14 +6,44 @@ static std::vector<agl::Pose> stitch(
     const std::vector<agl::Pose>& poses_b)
 {
     // TODO: Stitch two motions ---------------------------------------- //
-    //
-    //
+    std::vector<agl::Pose> new_poses = poses_a;
+    
+    Vec3 v3 = poses_a.back().root_position;
+    float x = v3.x();
+    float y = v3.y();
+    float z = v3.z();
+
+    Vec3 last_root_pos = Vec3(x, 0, z);
+    Quat last_root_orient = poses_a.back().local_rotations[0];
+    
+    // Compute inverse of first orientation of poses_b
+    Quat inverse = poses_b[0].local_rotations[0].inverse();
+
+    for(int i=0 ; i<poses_b.size() ; i++){
+        agl::Pose newPose = poses_b[i];
+        
+        // Rotate root position vector to desired orientation
+        newPose.root_position = last_root_orient * inverse * newPose.root_position;
+        // Then translate the position
+        newPose.root_position += last_root_pos;
+
+        // Multiply inverse of first orientation
+        // Then rotate by last root orientation of poses_a
+        // Changing the base orientation to last frame of poses_a
+        newPose.local_rotations[0] = last_root_orient * inverse * poses_b[i].local_rotations[0];
+
+        new_poses.push_back(newPose);
+    }
+
+
+    return new_poses;
+
     // ----------------------------------------------------------------- //
     
     // Dummy code ------------------------------------------------------ //
-    std::vector<agl::Pose> new_poses = poses_a;
-    new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
-    return new_poses;
+    // std::vector<agl::Pose> new_poses = poses_a;
+    // new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
+    // return new_poses;
     // ----------------------------------------------------------------- //
 }
 
@@ -24,6 +54,7 @@ public:
     agl::Motion             motion_a;
     agl::Motion             motion_b;
     std::vector<agl::Pose>  stitched;
+    Vec3 cam_offset;
 
     void start()
     {       
@@ -39,18 +70,67 @@ public:
         motion_a = motion_a_fbx.motion(model).at(0);
         motion_b = motion_b_fbx.motion(model).at(0);
 
+        // Rotate motion by 90 degrees
+        Quat dq(AAxis(M_PI * 0.5f, Vec3::UnitY()));
+        for(auto& pose : motion_a.poses)
+        {
+            pose.root_position = dq * pose.root_position;
+            pose.local_rotations.at(0) = dq * pose.local_rotations.at(0);
+        }
+
+
         stitched = stitch(motion_a.poses, motion_b.poses);
+
+        cam_offset = 2.0f * Vec3(0.0f, 3.0f, 3.0f);
+        std::cout << cam_offset << std::endl;
+
     }
+
+    
+    //Mat4 basis = Mat4::Identity();
 
     int frame = 0;
     void update() override
     {
         model->set_pose(stitched.at(frame));
         frame = (frame + 1) % stitched.size();
+
+        agl::spJoint root = model->joint(0);
+        Vec3 focus = root->world_pos();
+        focus.y() = 1.0f;
+
+        Vec3 pos = root->world_pos();
+        pos = pos + cam_offset;
+        pos.y() = 2.0f;
+
+        camera().set_position(pos);
+        camera().set_focus(focus);
+
+        /* Projecting root to floor
+        Vec3 basis_pos = root->world_pos();
+        basis_pos.y() = 0.0f;
+        basis.col(3).head<3>() = basis_pos;
+
+        Mat3 root_rot = model->joint(0)->world_rot_mat();
+        Vec3 root_dir = root_rot * Vec3(0, 0, 1); // = root_rot.col(2)
+        root_dir.y() = 0.0f;
+        
+        Vec3 basis_z_axis = root_dir.normalized();
+        Vec3 basis_y_axis = Vec3(0, 1, 0);
+        Vec3 basis_x_axis = basis_y_axis.cross(basis_z_axis);
+        basis.col(0).head<3>() = basis_x_axis;
+        basis.col(1).head<3>() = basis_y_axis;
+        basis.col(2).head<3>() = basis_z_axis;
+        */
+        
+        
     }
 
     void render() override
     {
+        Vec3 z_dir = model->root()->world_rot_mat().col(2);
+
+
         agl::Render::plane()
             ->scale(15.0f)
             ->floor_grid(true)
@@ -58,6 +138,10 @@ public:
             ->draw();
         
         agl::Render::model(model)->draw();
+
+        // agl::Render::cube()
+        //     ->transform(basis)
+        //     ->draw();
     }
 
     void key_callback(char key, int action) override
