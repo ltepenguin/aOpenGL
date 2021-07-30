@@ -3,7 +3,7 @@
 
 static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, float weight_a)
 {
-    // TODO: Interpolate pose_a and pose_b ----------------------------- //
+#if 1
     agl::Pose newPose;
     for(int i=0 ; i<pose_a.local_rotations.size() ; i++){
         newPose.local_rotations.push_back(
@@ -12,12 +12,13 @@ static agl::Pose interpolate(const agl::Pose& pose_a, const agl::Pose& pose_b, f
     }
     newPose.root_position = pose_a.root_position * (1 - weight_a) + pose_b.root_position * weight_a;
     return newPose;
-    // ----------------------------------------------------------------- //
-
+#else
+    // TODO: Interpolate pose_a and pose_b ----------------------------- //
     // Dummy code ------------------------------------------------------ //
-    // agl::Pose pose = pose_b;
-    // return pose;
+    agl::Pose pose = pose_b;
+    return pose;
     // ----------------------------------------------------------------- //
+#endif
 }
 
 class MyApp : public agl::App

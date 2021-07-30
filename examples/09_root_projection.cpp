@@ -11,8 +11,6 @@ public:
     Mat4 cube_transform;
     Mat4 proj_transform;
 
-
-
     int frame = 0;
 
     void start() override{

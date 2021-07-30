@@ -5,7 +5,7 @@ static std::vector<agl::Pose> stitch(
     const std::vector<agl::Pose>& poses_a, 
     const std::vector<agl::Pose>& poses_b)
 {
-    // TODO: Stitch two motions ---------------------------------------- //
+#if 1
     std::vector<agl::Pose> new_poses = poses_a;
     
     Vec3 v3 = poses_a.back().root_position;
@@ -24,6 +24,7 @@ static std::vector<agl::Pose> stitch(
         
         // Rotate root position vector to desired orientation
         newPose.root_position = last_root_orient * inverse * newPose.root_position;
+        
         // Then translate the position
         newPose.root_position += last_root_pos;
 
@@ -35,16 +36,15 @@ static std::vector<agl::Pose> stitch(
         new_poses.push_back(newPose);
     }
 
-
     return new_poses;
-
-    // ----------------------------------------------------------------- //
-    
+#else
+    // TODO: Stitch two motions ---------------------------------------- //
     // Dummy code ------------------------------------------------------ //
-    // std::vector<agl::Pose> new_poses = poses_a;
-    // new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
-    // return new_poses;
+    std::vector<agl::Pose> new_poses = poses_a;
+    new_poses.insert(new_poses.end(), poses_b.begin(), poses_b.end());
+    return new_poses;
     // ----------------------------------------------------------------- //
+#endif
 }
 
 class MyApp : public agl::App
@@ -78,7 +78,6 @@ public:
             pose.local_rotations.at(0) = dq * pose.local_rotations.at(0);
         }
 
-
         stitched = stitch(motion_a.poses, motion_b.poses);
 
         cam_offset = 2.0f * Vec3(0.0f, 3.0f, 3.0f);
@@ -105,25 +104,6 @@ public:
 
         camera().set_position(pos);
         camera().set_focus(focus);
-
-        /* Projecting root to floor
-        Vec3 basis_pos = root->world_pos();
-        basis_pos.y() = 0.0f;
-        basis.col(3).head<3>() = basis_pos;
-
-        Mat3 root_rot = model->joint(0)->world_rot_mat();
-        Vec3 root_dir = root_rot * Vec3(0, 0, 1); // = root_rot.col(2)
-        root_dir.y() = 0.0f;
-        
-        Vec3 basis_z_axis = root_dir.normalized();
-        Vec3 basis_y_axis = Vec3(0, 1, 0);
-        Vec3 basis_x_axis = basis_y_axis.cross(basis_z_axis);
-        basis.col(0).head<3>() = basis_x_axis;
-        basis.col(1).head<3>() = basis_y_axis;
-        basis.col(2).head<3>() = basis_z_axis;
-        */
-        
-        
     }
 
     void render() override
@@ -138,10 +118,6 @@ public:
             ->draw();
         
         agl::Render::model(model)->draw();
-
-        // agl::Render::cube()
-        //     ->transform(basis)
-        //     ->draw();
     }
 
     void key_callback(char key, int action) override
