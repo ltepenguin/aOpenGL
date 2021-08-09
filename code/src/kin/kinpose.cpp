@@ -75,7 +75,7 @@ void add_displacement(KinPose& self, const KinDisp& disp, const spKinModel& kmod
 
     // local_T0
     {
-        self.local_T0 += w * disp.local_T0;
+        self.local_T0 += w * disp_copy.local_T0;
     }
 
     // local_Rs

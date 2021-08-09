@@ -31,6 +31,7 @@ struct KinPose
     Mat4                world_basisTrf;
     std::vector<Mat4>   world_trfs;
     
+    // ! root의 경우는 world 와 같음.
     Vec3                local_T0;
     std::vector<Mat4>   local_Rs;
 
