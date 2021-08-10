@@ -17,6 +17,7 @@
 #include "aOpenGL/texture.h"
 #include "aOpenGL/util.h"
 
+#include "aOpenGL/kin/kindisp.h"
 #include "aOpenGL/kin/kinmodel.h"
 #include "aOpenGL/kin/kinmotion.h"
 #include "aOpenGL/kin/kinpose.h"
