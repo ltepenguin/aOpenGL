@@ -35,3 +35,8 @@ sudo apt-get install -y libglu1-mesa-dev
 3. `cd build`
 4. `cmake ..`
 5. `make -j`
+
+## Making New Projects using aOpenGL
+1. Go to wiki and find a page named 'How to make your new project with aOpenGL & aLibTorch'
+> page: https://github.com/ltepenguin/aOpenGL/wiki/How-to-make-your-new-project-with-aOpenGL-&-aLibTorch
+2. Follow the instructions step by step reading the page.
