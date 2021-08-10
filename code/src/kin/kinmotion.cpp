@@ -7,6 +7,7 @@ static std::vector<KinPose> _get_poses(const spKinModel& kmodel,
                                        const Motion&     motion)
 {
     int pidx_n = motion.poses.size();
+    Mat4 root_preTrf = kmodel->pre_trfs.at(0);
 
     // create poses
     std::vector<KinPose> poses;
@@ -14,16 +15,28 @@ static std::vector<KinPose> _get_poses(const spKinModel& kmodel,
     for(int i = 0; i < pidx_n; ++i)
     {
         KinPose pose;
-        pose.local_T0 = motion.poses.at(i).root_position;
+
+        // world_pos = basisTrf * local_pos
+        Vec4 world_root_pos;
+        world_root_pos.head<3>() = motion.poses.at(i).root_position;
+        world_root_pos.w() = 1.0f;
+
         for(int j = 0; j < (int)kmodel->gl_jnt_idxes.size(); ++j)
         {
             int jidx = kmodel->gl_jnt_idxes.at(j);
-            pose.local_Rs.push_back(
+            pose.local_rots.push_back(
                 to_mat4(motion.poses.at(i).local_rotations.at(jidx))
             );
         }
-        pose.world_trfs = kin::compute_fk(kmodel, pose.local_T0, pose.local_Rs);
-        pose.world_basisTrf = pose.world_trfs.at(0);
+        
+        pose.world_basisTrf = Mat4::Identity();
+        pose.root_preR  = root_preTrf;
+        pose.local_pos  = world_root_pos;
+        pose.world_trfs = kin::compute_fk(kmodel, pose.world_basisTrf, pose.local_pos, pose.local_rots);
+
+        // this will compute root's local_pos and local_rots
+        kin::reset_world_basisTrf(pose, pose.world_trfs.at(0));
+
         poses.push_back(std::move(pose));
     }
     

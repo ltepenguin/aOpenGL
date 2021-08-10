@@ -23,12 +23,17 @@ struct KinModel : public std::enable_shared_from_this<KinModel>
     /**
      * @brief           Forward Kinematics
      * 
-     * @param T0        root position
-     * @param local_Rs  local joint orientations in jnt_names order
-     * @return          world joint transformations in jnt_names order
+     * @param basisTrf      basis transform
+     * @param local_pos     root position
+     * @param local_rots    local joint orientations in jnt_names order
+     * @return              world joint transformations in jnt_names order
      */
-    std::vector<Mat4> compute_fk(const Vec3& T0, const std::vector<Quat>& local_Rs);
-    std::vector<Mat4> compute_fk(const Vec3& T0, const std::vector<Mat4>& local_Rs);
+    std::vector<Mat4> compute_fk(const Mat4& basisTrf, 
+                                 const Vec4& local_pos, 
+                                 const std::vector<Quat>& local_rots);
+    std::vector<Mat4> compute_fk(const Mat4& basisTrf, 
+                                 const Vec4& local_pos, 
+                                 const std::vector<Mat4>& local_rots);
 };
 using spKinModel = std::shared_ptr<KinModel>;
 
@@ -57,18 +62,20 @@ namespace kin {
 /**
  * @brief           Forward Kinematics
  * 
- * @param kmodel    kinmodel
- * @param world_T0  world root position
- * @param local_Rs  local joint rotations in jnt_names order. size: noj
- * @return          world trfs in jnt_names order
+ * @param basisTrf      basis transform
+ * @param local_pos     root position
+ * @param local_rots    local joint orientations in jnt_names order
+ * @return              world joint transformations in jnt_names order
  */
 std::vector<Mat4> compute_fk(const spKinModel&        kmodel,
-                             const Vec3&              world_T0,
-                             const std::vector<Quat>& local_Rs);
+                             const Mat4&              basisTrf,
+                             const Vec4&              local_pos,
+                             const std::vector<Quat>& local_rots);
 
 std::vector<Mat4> compute_fk(const spKinModel&        kmodel,
-                             const Vec3&              world_T0,
-                             const std::vector<Mat4>& local_Rs);
+                             const Mat4&              basisTrf,
+                             const Vec4&              local_pos,
+                             const std::vector<Mat4>& local_rots);
 
 }
 }

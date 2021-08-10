@@ -222,12 +222,16 @@ void Model::set_pose(const Pose& pose, const std::vector<std::string>& names)
 
 void Model::set_pose(const KinPose& pose, const std::vector<std::string>& names)
 {
-    this->root()->set_local_pos(pose.local_T0);
+    Vec3 root_pos = pose.world_trfs.at(0).col(3).head<3>();
+    Mat3 root_rot = pose.world_trfs.at(0).block<3, 3>(0, 0);
+    this->root()->set_local_pos(root_pos);
+    this->root()->set_world_rot(root_rot);
 
-    for(int i = 0; i < (int)names.size(); ++i)
+    // other root
+    for(int i = 1; i < (int)names.size(); ++i)
     {
         int idx = m_jnt_name_to_idx.at(names.at(i));
-        m_joints.at(idx)->set_local_rot(pose.local_Rs.at(i));
+        m_joints.at(idx)->set_local_rot(pose.local_rots.at(i));
     }
     
     this->root()->update_world_trf_children();

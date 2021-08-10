@@ -184,7 +184,7 @@ void Joint::set_world_rot(const Mat3& rotation)
     // R = pre_trf.inv * parent_trf.inv * world_trf * S.inv
     Mat3 preR = this->pre_rot_mat();
     Mat3 parentR = (m_parent == nullptr) ? Mat3::Identity() : m_parent->world_rot_mat();
-    Mat3 localR = preR.transpose() * parentR.transpose() * this->world_rot_mat();
+    Mat3 localR = preR.transpose() * parentR.transpose() * rotation;
     this->set_local_rot(localR);
 }
 

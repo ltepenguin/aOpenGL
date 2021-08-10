@@ -108,14 +108,14 @@ spKinModel kinmodel(const spModel& model, const std::vector<std::string>& jnt_na
     return kmodel;
 }
 
-std::vector<Mat4> KinModel::compute_fk(const Vec3& T0, const std::vector<Quat>& local_Rs)
+std::vector<Mat4> KinModel::compute_fk(const Mat4& basisTrf, const Vec4& local_pos, const std::vector<Quat>& local_rots)
 {
-    return kin::compute_fk(shared_from_this(), T0, local_Rs);
+    return kin::compute_fk(shared_from_this(), basisTrf, local_pos, local_rots);
 }
 
-std::vector<Mat4> KinModel::compute_fk(const Vec3& T0, const std::vector<Mat4>& local_Rs)
+std::vector<Mat4> KinModel::compute_fk(const Mat4& basisTrf, const Vec4& local_pos, const std::vector<Mat4>& local_rots)
 {
-    return kin::compute_fk(shared_from_this(), T0, local_Rs);
+    return kin::compute_fk(shared_from_this(), basisTrf, local_pos, local_rots);
 }
 
 // Functions ------------------------------------------------------- //
@@ -123,16 +123,18 @@ std::vector<Mat4> KinModel::compute_fk(const Vec3& T0, const std::vector<Mat4>& 
 namespace kin {
 
 std::vector<Mat4> compute_fk(const spKinModel&        kmodel,
-                             const Vec3&              world_T0,
-                             const std::vector<Quat>& local_Rs)
+                             const Mat4&              basisTrf,
+                             const Vec4&              local_pos,
+                             const std::vector<Quat>& local_rots)
 {
-    std::vector<Mat4> local_Rs_trfs = a::gl::to_mat4<Quat>(local_Rs);
-    return compute_fk(kmodel, world_T0, local_Rs_trfs);
+    std::vector<Mat4> local_Rs_trfs = a::gl::to_mat4<Quat>(local_rots);
+    return compute_fk(kmodel, basisTrf, local_pos, local_Rs_trfs);
 }
 
 std::vector<Mat4> compute_fk(const spKinModel&        kmodel,
-                             const Vec3&              world_T0,
-                             const std::vector<Mat4>& local_Rs)
+                             const Mat4&              basisTrf,
+                             const Vec4&              local_pos,
+                             const std::vector<Mat4>& local_rots)
 {
     std::vector<Mat4> world_trfs;
     world_trfs.resize(kmodel->noj, Mat4::Identity());
@@ -147,14 +149,13 @@ std::vector<Mat4> compute_fk(const spKinModel&        kmodel,
         if(par_idx < 0) // root joint (no parent)
         {
             Mat4 pre_trf = kmodel->pre_trfs.at(jnt_idx);
-            pre_trf.col(3).head<3>() = world_T0;
-            
-            world_trfs.at(jnt_idx) = pre_trf * local_Rs.at(jnt_idx);
+            pre_trf.col(3) = local_pos;
+            world_trfs.at(jnt_idx) = basisTrf * pre_trf * local_rots.at(jnt_idx);
         }
         else
         {
             world_trfs.at(jnt_idx)
-                = world_trfs.at(par_idx) * kmodel->pre_trfs.at(jnt_idx) * local_Rs.at(jnt_idx);
+                = world_trfs.at(par_idx) * kmodel->pre_trfs.at(jnt_idx) * local_rots.at(jnt_idx);
         }
     }
     return world_trfs;
