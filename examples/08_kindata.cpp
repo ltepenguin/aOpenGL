@@ -83,23 +83,45 @@ public:
 
     void render_xray() override
     {
-        agl::Render::cube()->transform(kpose.world_basisTrf)->debug(true)
-            ->scale(0.1f)->color(0, 1, 0)->draw();
+        agl::Render::cube()
+            ->transform(kpose.world_basisTrf)
+            ->scale(0.1f)
+            ->color(0, 1, 0)
+            ->debug(true)
+            ->draw();
+
         for(auto trf : kpose.world_trfs)
         {
-            agl::Render::cube()->transform(trf)->debug(true)
-                ->color(1, 1, 0)->scale(0.05f)->draw();
+            agl::Render::cube()
+                ->transform(trf)
+                ->color(1, 1, 0)
+                ->scale(0.05f)
+                ->debug(true)
+                ->draw();
         }
 
-        agl::Render::cube()->scale(0.1f)->debug(true)
-            ->position(kpose.local_pos.head<3>())->color(1, 0, 0)->draw();
+        agl::Render::cube()
+            ->scale(0.1f)
+            ->position(kpose.local_pos.head<3>())
+            ->color(1, 0, 0)
+            ->debug(true)
+            ->draw();
         
-        agl::Render::cube()->transform(simul_pose.world_basisTrf)->debug(true)
-            ->scale(0.1f)->color(0, 0, 1)->draw();
+        agl::Render::cube()
+            ->transform(simul_pose.world_basisTrf)
+            ->scale(0.1f)
+            ->color(0, 0, 1)
+            ->debug(true)
+            ->draw();
+
         for(auto trf : simul_pose.world_trfs)
         {
-            agl::Render::cube()->transform(trf)->debug(true)
-                ->color(1, 0, 1)->scale(0.05f)->draw();
+            agl::Render::cube()
+                ->transform(trf)
+                ->color(1, 0, 1)
+                ->scale(0.05f)
+                ->debug(true)
+                ->draw();
         }
     }
 
