@@ -29,6 +29,7 @@ add_library(aOpenGL SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core/primitive/Sphere.cpp
 
     # kinematics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kindisp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinmodel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinmotion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/kin/kinpose.cpp

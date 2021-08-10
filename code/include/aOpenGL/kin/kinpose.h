@@ -1,8 +1,11 @@
 #pragma once
 #include "../eigentype.h"
+#include "kindisp.h"
 #include <memory>
 
 namespace a::gl {
+
+struct KinDisp;
 
 struct KinModel;
 using spKinModel = std::shared_ptr<KinModel>;
@@ -20,11 +23,34 @@ struct KinPose
     KinPose& operator=(const KinPose&)  = default;
     KinPose& operator=(KinPose&&)       = default;
 
-    // functions
     void init_world_basisTrf_from_shoulders(int Ridx, int Lidx); // initialize baseTrf using shoulder joints
+    
+    /**
+     * @brief This function changes the world transformation.
+     */    
     void move_world_basisTrf(const Mat4& tar_basis);
-    void move_world_basisTrf(const Mat4& cur_basis, const Mat4& tar_basis);
+    
+    /**
+     * @brief This function changes the world transformation.
+     *        ! 주의: tar_trf 으로 basis를 옮기는 것이 아님.
+     */    
+    void move_world_basisTrf_anchor(const Mat4 src_trf, const Mat4& tar_trf);
+    
+    /**
+     * @brief This function does not change the world transformation.
+     */
+    void reset_world_basisTrf(const Mat4& basisTrf);
+
+    /**
+     * @brief recompute local_pos and local_rots.at(0)
+     */
     void recompute_local_root();
+
+    /**
+     * @brief see KinDisp for detailed implementation
+     */
+    void add(const KinDisp& disp, spKinModel kmodel);
+    void add(const KinDisp& disp, spKinModel kmodel, float weight);
 
     // ! 이 정보들은 바로 수정하지 말것!
     Mat4                world_basisTrf;
@@ -45,28 +71,33 @@ public:
 
 namespace kin {
 
-void        recompute_local_root(KinPose& self);
+void recompute_local_root(KinPose& self);
 
 /**
  * @brief This function changes the basis and local root transformation.
  */
-void        init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx); // initialize basis using shoulder joints
+void init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx); // initialize basis using shoulder joints
 
 /**
  * @brief This function does not change the world transformation.
  */
-void        reset_world_basisTrf(KinPose& self, const Mat4& basisTrf);
+void reset_world_basisTrf(KinPose& self, const Mat4& basisTrf);
 
 /**
  * @brief This function changes the world transformation.
  */
-void        move_world_basisTrf(KinPose& self, const Mat4& tar_basis);
+void move_world_basisTrf(KinPose& self, const Mat4& tar_basis);
 
 /**
  * @brief This function changes the world transformation.
- *        Local root info. is recalculated.
  */
-void        move_world_basisTrf(KinPose& self, const Mat4& cur_basis, const Mat4& tar_basis);
+void move_world_basisTrf_anchor(KinPose& self, const Mat4& cur_trf, const Mat4& tar_trf);
+
+/**
+ * @brief add displacement
+ */
+void add(KinPose& pose, const KinDisp& disp, spKinModel kmodel);
+void add(KinPose& pose, const KinDisp& disp, spKinModel kmodel, float weight);
 
 }
 }
