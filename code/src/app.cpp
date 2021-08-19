@@ -9,7 +9,7 @@ struct App::IO
     double lastMouseY;
 };
 
-App::App(): m_camera(), m_light(), m_capture(false), m_width(1920), m_height(1080), _io(new App::IO)
+App::App(): m_camera(), m_light(), m_capture(false), m_width(1920), m_height(1080), m_capture_path("capture/"), _io(new App::IO)
 {}
 
 App::~App()

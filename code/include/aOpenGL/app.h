@@ -46,13 +46,18 @@ public:
 
    bool capture() { return m_capture; }
    void capture(bool set) { m_capture = set; }
+   void set_capture_path(std::string path) { m_capture_path = path; }
+   std::string capture_path() { return m_capture_path; }
 
 private:
    Camera m_camera;
    Light  m_light;
    bool   m_capture;
+   
    int    m_width;
    int    m_height;
+
+   std::string m_capture_path;
 
    struct IO;
    std::unique_ptr<App::IO> _io;

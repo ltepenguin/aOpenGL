@@ -3,10 +3,12 @@
 #include "aOpenGL/app.h"
 #include "aOpenGL/image.h"
 #include "aOpenGL/config.h"
+#include "aOpenGL/file.h"
 
 #include <iostream>
 #include <glm/gtc/quaternion.hpp>
 #include <ctime>
+#include <filesystem>
 
 namespace a::gl {
 
@@ -188,7 +190,9 @@ void AppManager::start_loop()
             {
                 static int shot = 0;
                 auto scene = capture_screen();
-                Image::save_image("capture/capture" + std::to_string(shot) + ".png", scene, true);
+                if(file_check(app->capture_path()) == false)
+                    std::filesystem::create_directories(app->capture_path());
+                Image::save_image(app->capture_path() + std::to_string(shot) + ".png", scene, true);
                 shot++;
             }
         }
