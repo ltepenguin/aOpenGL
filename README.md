@@ -1,4 +1,4 @@
-aOpenGL은 Ubuntu에서 사용하는 OpenGL 라이브러리입니다.
+aOpenGL은 Ubuntu에서 사용하는 OpenGL 라이브러리입니다.\
 aOpenGL을 사용하기 위해서는 FBXSDK 와 여러가지 외부 라이브러리들이 필요합니다.
 
 ## 외부 라이브러리 다운로드
@@ -86,10 +86,10 @@ cd build
 ```
 더 많은 예제들은 examples 폴더에 있습니다.
 
-## aOpenGL 조작법
-F1: Wireframe Mode Off
-F2: Wireframe Mode On
-F5: Capture Mode On (build/capture 폴더 안에 매프레임 저장)
+## aOpenGL 키보드 입력
+F1: Wireframe Mode Off \
+F2: Wireframe Mode On \
+F5: Capture Mode On (build/capture 폴더 안에 매프레임 저장) \
 F6: Capture Mode Off
 
 ## Making New Projects using aOpenGL
