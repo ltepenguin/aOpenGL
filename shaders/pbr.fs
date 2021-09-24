@@ -44,6 +44,9 @@ uniform float u_dispMapScale;
 
 // ----------------------------------------------------------------------------
 uniform bool  u_floor_grid;
+uniform vec3  u_grid_color;
+uniform float u_grid_width;
+uniform float u_grid_interval;
 
 // ----------------------------------------------------------------------------
 const float PI = 3.14159265359;
@@ -66,12 +69,13 @@ vec3 OECF_sRGBFast(const vec3 linear) {
 }
 
 // ----------------------------------------------------------------------------
-float filteredGrid(in vec2 p, in vec2 dpdx, in vec2 dpdy )
+float filteredGrid(in vec2 p, in vec2 dpdx, in vec2 dpdy, float line_interval, float line_width)
 {
-	float sizeCoeff = 0.75; // grid n
+    float sizeCoeff = line_interval; // grid n
 	p *= sizeCoeff;
 
-    const float _N = 800.0; // line size
+    //const float _N = 800.0; // line size
+    float _N = 800.0 / line_width;
     vec2 w = max(abs(dpdx), abs(dpdy));
 	w *= sizeCoeff;
     vec2 a = p + 0.5 * w;                        
@@ -432,23 +436,26 @@ void main()
     float shadow = ShadowCalculation(fs_lightSpacePos, N, lightDir, u_shadowMap);
     shadow = clamp(shadow, 0.0, 1.0);
 
-    vec3 gridCol = vec3(0.0);
+    float gridWeight = 0.0f;
     
     if(u_floor_grid)
     {
+        float line_width = u_grid_width;
+        float line_interval = u_grid_interval;
+
         vec2 dpdx = dFdx(fs_worldPos.xz);
         vec2 dpdy = dFdy(fs_worldPos.xz);
-        float tile = filteredGrid(fs_worldPos.xz, dpdx, dpdy);
+        float tile = filteredGrid(fs_worldPos.xz, dpdx, dpdy, line_interval, line_width);
         tile = pow(tile, 3.0);
-        
-        gridCol = vec3(1.0 - tile);
-        //Lo = Lo + gridCol;
 
-        //vec3 gridCol = vec3(tile);
-        //Lo = Lo * gridCol;
+        gridWeight = 1.0 - tile;
     }
     
-    vec3 color = emissive + ambient + (1.0 - shadow) * Lo + (1.0 - 0.95 * shadow) * gridCol;
+    //vec3 color = emissive + ambient + (1.0 - shadow) * Lo + (1.0 - 0.95 * shadow) * gridCol;
+
+    vec3 color = emissive + ambient + (1.0 - shadow) * Lo;
+    color = (1.0 - gridWeight) * color + (gridWeight) * (1.0 - 0.95 * shadow) * u_grid_color;
+
 #if 0
     // HDR tonemapping
     color = color / (color + vec3(1.0));

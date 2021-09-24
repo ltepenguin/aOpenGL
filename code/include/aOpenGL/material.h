@@ -10,7 +10,7 @@ struct Material
     glm::vec3 albedo{0.7f, 0.7f, 0.7f};
     float alpha{1.0f};
     float metallic{0.0f};
-    float roughness{0.0f};
+    float roughness{1.0f};
 
     Texture albedo_map, normal_map, metallic_map, emissive_map;
     Texture roughness_map, ao_map, displacement_map;

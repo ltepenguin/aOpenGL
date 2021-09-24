@@ -37,7 +37,7 @@ core::Shader* Render::background_shader;
 // app render info
 struct Render::AppRenderInfo
 {
-    glm::vec4 sky_color{glm::vec4(0.8f, 0.8f, 0.82f, 1.0f)};
+    glm::vec4 sky_color{glm::vec4(0.9f, 0.9f, 0.92f, 1.0f)};
     glm::vec3 cam_position;
     glm::mat4 cam_projection;
     glm::mat4 cam_view;
@@ -437,7 +437,12 @@ void Render::draw_pbr(spRenderOptions option, core::Shader* shader)
 
         shader->setFloat("u_uv_scale", option->m_uv_repeat);
         shader->setFloat("u_dispMapScale", option->m_disp_map_scale);
+        
         shader->setBool("u_floor_grid", option->m_draw_floor_grid);
+        shader->setVec3("u_grid_color", option->m_grid_color);
+        shader->setFloat("u_grid_width", option->m_grid_width);
+        shader->setFloat("u_grid_interval", option->m_grid_interval);
+
         shader->setBool("u_debug", option->m_debug);
     }
 

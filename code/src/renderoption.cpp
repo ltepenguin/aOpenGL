@@ -19,6 +19,9 @@ RenderOptions::RenderOptions(core::VAO vao,
     m_disp_map_scale(0.01f),
     m_uv_repeat(1.0f),
     m_draw_floor_grid(false),
+    m_grid_color(1.0f, 1.0f, 1.0f),
+    m_grid_width(1.0f),
+    m_grid_interval(1.0f),
     m_debug(false),
     m_use_skinning(false),
     m_buffer_transforms(),
@@ -204,9 +207,13 @@ spRenderOptions RenderOptions::disp_scale(float scale)
     return shared_from_this();
 }
 
-spRenderOptions RenderOptions::floor_grid(bool is_floor)
+//spRenderOptions RenderOptions::floor_grid(bool is_floor)
+spRenderOptions RenderOptions::floor_grid(bool use_grid, Vec3 line_color, float line_width, float line_interval)
 {
-    this->m_draw_floor_grid = is_floor;
+    this->m_draw_floor_grid = use_grid;
+    this->m_grid_color = to_glm(line_color);
+    this->m_grid_width = line_width;
+    this->m_grid_interval = line_interval;
     return shared_from_this();
 }
 
