@@ -19,7 +19,7 @@ cd fbxsdk_linux
 ```
 mkdir fbxsdk
 chmod ugo+x [FBXSDK 설치 파일]
-[FBXSDK 설치 파일] fbxsdk
+./[FBXSDK 설치 파일] fbxsdk
 ```
 5. `fbxsdk` 폴더 안의 파일들을 `aOpenGL/ext/fbxsdk` 폴더 안으로 복사합니다.
 
@@ -30,16 +30,16 @@ FBXSDK 는 XML2 라이브러리가 필요합니다.
 sudo apt-get install libxml2-dev
 ```
 
-### OpenGL dependencies
+### OpenGL Dependencies
 아래 라이브러리들은 OpenGL에 필요한 라이브러리입니다.
 다음 명령어를 실행해서 설치합니다
 ```
-sudo apt-get install -y libxrandr-dev
-sudo apt-get install -y libxinerama-dev
-sudo apt-get install -y libxcursor-dev
-sudo apt-get install -y libxi-dev
-sudo apt-get install -y libgl-dev
-sudo apt-get install -y libglu1-mesa-dev
+sudo apt-get install -y libxrandr-dev;
+sudo apt-get install -y libxinerama-dev;
+sudo apt-get install -y libxcursor-dev;
+sudo apt-get install -y libxi-dev;
+sudo apt-get install -y libgl-dev;
+sudo apt-get install -y libglu1-mesa-dev;
 ```
 
 ## 설치
