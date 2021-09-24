@@ -8,47 +8,51 @@ public:
     const char* p_metallic  = "../data/textures/Metal032_4K-JPG/Metal032_4K_Metalness.jpg";
     const char* p_roughness = "../data/textures/Metal032_4K-JPG/Metal032_4K_Roughness.jpg";
 
-    const char* p_color2     = "../data/textures/Rock037_4K-JPG/Rock037_4K_Color.jpg";
-    const char* p_normal2    = "../data/textures/Rock037_4K-JPG/Rock037_4K_Normal.jpg";
-    const char* p_roughness2 = "../data/textures/Rock037_4K-JPG/Rock037_4K_Roughness.jpg";
-    const char* p_disp2      = "../data/textures/Rock037_4K-JPG/Rock037_4K_Displacement.jpg";
-    const char* p_ao2        = "../data/textures/Rock037_4K-JPG/Rock037_4K_AmbientOcclusion.jpg";
-
-    const char* p_color3     = "../data/textures/Fabric036_4K-JPG/Fabric036_4K_Color.jpg";
-    const char* p_normal3    = "../data/textures/Fabric036_4K-JPG/Fabric036_4K_Normal.jpg";
-    const char* p_roughness3 = "../data/textures/Fabric036_4K-JPG/Fabric036_4K_Roughness.jpg";
-    const char* p_disp3      = "../data/textures/Fabric036_4K-JPG/Fabric036_4K_Displacement.jpg";
-    const char* p_ao3        = "../data/textures/Fabric036_4K-JPG/Fabric036_4K_AmbientOcclusion.jpg";
-
-    const char* p_color4     = "../data/textures/Tiles058_2K-JPG/Tiles058_2K_Color.jpg";
-    const char* p_normal4    = "../data/textures/Tiles058_2K-JPG/Tiles058_2K_Normal.jpg";
-    const char* p_roughness4 = "../data/textures/Tiles058_2K-JPG/Tiles058_2K_Roughness.jpg";
-    const char* p_disp4      = "../data/textures/Tiles058_2K-JPG/Tiles058_2K_Displacement.jpg";
-    const char* p_metal4     = "../data/textures/Tiles058_2K-JPG/Tiles058_2K_Metalness.jpg";
-
-    int frame = 0;
-    void update() override
+    void start() override
     {
-        frame++;
+        // change the sky color
+        agl::Render::set_sky_color(0.8f, 0.9f, 1.0f);
     }
 
     void render() override
     {
-        float scale = 1.0f + std::sin(0.01f * frame);
-        
-        float angle = frame * 0.005f;
-        Quat rq(AAxis(angle, Vec3::UnitY()));
-        
+        // draw plane
         agl::Render::plane()
-            ->scale(1.0f)
-            ->texture(p_color2, agl::TextureType::kAlbedo)
-            ->texture(p_normal2, agl::TextureType::kNormal)
-            ->texture(p_roughness2, agl::TextureType::kRoughness)
-            ->texture(p_disp2, agl::TextureType::kDisplacement)
-            ->texture(p_ao2, agl::TextureType::kAO)
-            ->metallic(0.0f)
-            ->disp_scale(0.01f)
-            ->orientation(rq.toRotationMatrix())
+            ->scale(1500.0f)
+            ->floor_grid(true, Vec3(0, 0, 0), 4.0f)
+            ->draw();
+
+        // draw cylinder
+        agl::Render::cylinder()
+            ->position(-2.0f, 0.5f, 0)
+            ->scale(0.5)
+            ->draw();
+
+        // draw textured sphere 
+        agl::Render::sphere()
+            ->position(1.0f, 1.0f, 1.0f)
+            ->texture(p_color, agl::TextureType::kAlbedo)
+            ->texture(p_normal, agl::TextureType::kNormal)
+            ->texture(p_roughness, agl::TextureType::kRoughness)
+            ->texture(p_metallic, agl::TextureType::kMetallic)
+            ->draw();
+
+        // draw textured cube
+        a::gl::Render::cube()
+            ->position(0.0f, 0.5f, 0.0f)
+            ->texture(p_color, agl::TextureType::kAlbedo)
+            ->texture(p_normal, agl::TextureType::kNormal)
+            ->texture(p_roughness, agl::TextureType::kRoughness)
+            ->texture(p_metallic, agl::TextureType::kMetallic)
+            ->draw();
+        
+        // draw cone
+        //   NOTE: rendering order is important for a transparent object
+        agl::Render::cone()
+            ->alpha(0.6f)
+            ->color(1, 1, 0)
+            ->position(-1.0f, 0.5f, 0)
+            ->scale(0.5)
             ->draw();
     }
 };

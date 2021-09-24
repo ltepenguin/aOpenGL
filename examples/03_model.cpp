@@ -38,7 +38,6 @@ public:
             ->draw();
 
         agl::Render::model(model)
-            ->alpha(0.5f)
             ->draw();
     }
 
