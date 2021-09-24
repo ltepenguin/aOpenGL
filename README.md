@@ -1,7 +1,8 @@
 aOpenGL은 Ubuntu에서 사용하는 OpenGL 라이브러리입니다.
+
 aOpenGL을 사용하기 위해서는 FBXSDK 와 여러가지 외부 라이브러리들이 필요합니다.
 
-## 라이브러리 다운
+## 외부 라이브러리 다운로드
 
 ### FBXSDK
 FBX 파일들을 읽는데 필요한 라이브러리이며, Autodesk 공식 페이지에서 다운로드하시면 됩니다.
@@ -43,6 +44,7 @@ sudo apt-get install -y libglu1-mesa-dev
 
 ## 설치
 aOpenGL을 설치하기 전에, GLM과 GLFW 라이브러리를 빌드해줘야 합니다.
+GLM과 GLFW는 서브모듈로 ext 폴더에 
 
 ### GLM 빌드
 1. aOpenGL 폴더에 갑니다.
@@ -66,7 +68,7 @@ cmake ..
 make -j
 ```
 
-## aOpenGL 빌드
+### aOpenGL 빌드
 1. aOpenGL 폴더에 갑니다.
 2. 다음 명령어를 실행합니다.
 ```
