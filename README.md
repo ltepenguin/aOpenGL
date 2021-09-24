@@ -7,19 +7,19 @@ aOpenGL을 사용하기 위해서는 FBXSDK 와 여러가지 외부 라이브러
 ### FBXSDK
 FBX 파일들을 읽는데 필요한 라이브러리이며, Autodesk 공식 페이지에서 다운로드하시면 됩니다.
 
-1. 다음 링크로들어갑니다: `https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0`
-2. FBX SDK 2020.0.1 (Linux) 을 다운로드합니다. (파일명: *fbx20202_fbxsdk_linux.tar.gz*)
-3. 다운로드한 폴더에 들어가서 다음 명령어를 순서대로 실행하여 압축을 풀어줍니다.
+1. FBXSDK 페이지에 들어갑니다: `https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-2-1`
+3. FBX SDK Linux 버전을 다운로드합니다.
+4. 다운로드한 폴더에 들어가서 다음 명령어를 순서대로 실행하여 압축을 풀어줍니다.
 ```
 mkdir fbxsdk_linux
-tar -xvf fbx202001_fbxsdk_linux.tar.gz -C fbxsdk_linux
+tar -xvf [FBXSDK.TAR.GZ 파일] -C fbxsdk_linux
 cd fbxsdk_linux
 ```
 4. 다음 명령어를 순서대로 실행하여 파일들을 설치합니다.
 ```
 mkdir fbxsdk
-chmod ugo+x FBX20202_FBXFILESDK_LINUX
-./FBX20202_FBXFILESDK_LINUX ./fbxsdk
+chmod ugo+x [FBXSDK 설치 파일]
+[FBXSDK 설치 파일] fbxsdk
 ```
 5. `fbxsdk` 폴더 안의 파일들을 `aOpenGL/ext/fbxsdk` 폴더 안으로 복사합니다.
 
