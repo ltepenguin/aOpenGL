@@ -3,10 +3,6 @@
 class MyApp : public agl::App
 {
 public:
-    const char* p_color     = "../data/textures/Tiles012_2K-JPG/Tiles012_2K_Color.jpg";
-    const char* p_normal    = "../data/textures/Tiles012_2K-JPG/Tiles012_2K_Normal.jpg";
-    const char* p_roughness = "../data/textures/Tiles012_2K-JPG/Tiles012_2K_Roughness.jpg";
-
     float angle = 0.0f;
 
     void update() override
@@ -28,13 +24,11 @@ public:
         // draw textured sphere 
         agl::Render::sphere()
             ->orientation(q0.toRotationMatrix())
-            ->texture(p_color, agl::TextureType::kAlbedo)
-            ->texture(p_normal, agl::TextureType::kNormal)
-            ->texture(p_roughness, agl::TextureType::kRoughness)
             ->draw();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         agl::Render::sphere()
+            ->color(0, 0, 0)
             ->orientation(q0.toRotationMatrix())
             ->draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

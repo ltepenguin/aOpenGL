@@ -9,8 +9,7 @@ public:
         // draw plane
         agl::Render::plane()
             ->scale(10.0f)
-            ->color(0.1f, 0.1f, 0.1f)
-            ->floor_grid(true, Vec3(1, 1, 1), 0.5f)
+            ->floor_grid(true)
             ->draw();
 
         // draw cubes

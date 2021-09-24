@@ -11,7 +11,7 @@ public:
 
     void start() override
     {
-        agl::FBX fbx("../data/fbx/kmodel/model/kmodel.fbx");
+        agl::FBX fbx("../data/fbx/ybot/model/ybot.fbx");
         model   = fbx.model();
         motions = fbx.motion(model);
 
@@ -33,7 +33,6 @@ public:
     {
         agl::Render::plane()
             ->scale(10.0f)
-            ->color(0.15f, 0.15f, 0.15f)
             ->floor_grid(true)
             ->draw();
 
@@ -44,7 +43,7 @@ public:
     void render_xray() override
     {
         agl::Render::skeleton(model)
-            ->color(0.9, 0.9, 0)
+            ->color(0, 1, 1)
             ->draw();
     }
 };

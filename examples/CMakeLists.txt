@@ -14,9 +14,9 @@ target_link_libraries(model PUBLIC aOpenGL)
 add_executable(motion ${CMAKE_CURRENT_SOURCE_DIR}/04_motion.cpp)
 target_link_libraries(motion PUBLIC aOpenGL)
 
-# example 05: sphere
-add_executable(sphere ${CMAKE_CURRENT_SOURCE_DIR}/05_sphere.cpp)
-target_link_libraries(sphere PUBLIC aOpenGL)
+# example 05: wireframe
+add_executable(wireframe ${CMAKE_CURRENT_SOURCE_DIR}/05_wireframe.cpp)
+target_link_libraries(wireframe PUBLIC aOpenGL)
 
 # example 06: interpolate
 add_executable(interpolate ${CMAKE_CURRENT_SOURCE_DIR}/06_interpolate.cpp)

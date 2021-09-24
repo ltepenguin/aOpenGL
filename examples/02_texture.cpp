@@ -3,10 +3,10 @@
 class MyApp : public agl::App
 {
 public:
-    const char* p_color     = "../data/textures/Metal032_4K-JPG/Metal032_4K_Color.jpg";
-    const char* p_normal    = "../data/textures/Metal032_4K-JPG/Metal032_4K_Normal.jpg";
-    const char* p_metallic  = "../data/textures/Metal032_4K-JPG/Metal032_4K_Metalness.jpg";
-    const char* p_roughness = "../data/textures/Metal032_4K-JPG/Metal032_4K_Roughness.jpg";
+    const char* p_color     = "../data/textures/Metal032_1K-JPG/Metal032_1K_Color.jpg";
+    const char* p_normal    = "../data/textures/Metal032_1K-JPG/Metal032_1K_NormalGL.jpg";
+    const char* p_metallic  = "../data/textures/Metal032_1K-JPG/Metal032_1K_Metalness.jpg";
+    const char* p_roughness = "../data/textures/Metal032_1K-JPG/Metal032_1K_Roughness.jpg";
 
     void start() override
     {
@@ -19,7 +19,7 @@ public:
         // draw plane
         agl::Render::plane()
             ->scale(1500.0f)
-            ->floor_grid(true, Vec3(0, 0, 0), 4.0f)
+            ->floor_grid(true)
             ->draw();
 
         // draw cylinder
