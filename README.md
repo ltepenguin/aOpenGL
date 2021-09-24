@@ -9,17 +9,17 @@ FBX 파일들을 읽는데 필요한 라이브러리이며, Autodesk 공식 페�
 
 1. 다음 링크로들어갑니다: `https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0`
 2. FBX SDK 2020.0.1 (Linux) 을 다운로드합니다. (파일명: *fbx20202_fbxsdk_linux.tar.gz*)
-3. 다운로드한 폴더에 들어가서 다음 명령어를 실행하여 압축을 풀어줍니다.
+3. 다운로드한 폴더에 들어가서 다음 명령어를 순서대로 실행하여 압축을 풀어줍니다.
 ```
-mkdir fbxsdk_linux &&
- tar -xvf fbx202001_fbxsdk_linux.tar.gz -C fbxsdk_linux &&
- cd fbxsdk_linux
+mkdir fbxsdk_linux
+tar -xvf fbx202001_fbxsdk_linux.tar.gz -C fbxsdk_linux
+cd fbxsdk_linux
 ```
-4. 다음 명령어를 실행하여 파일들을 설치합니다.
+4. 다음 명령어를 순서대로 실행하여 파일들을 설치합니다.
 ```
-mkdir fbxsdk &&
-  chmod ugo+x FBX20202_FBXFILESDK_LINUX &&
-  ./FBX20202_FBXFILESDK_LINUX ./fbxsdk
+mkdir fbxsdk
+chmod ugo+x FBX20202_FBXFILESDK_LINUX
+./FBX20202_FBXFILESDK_LINUX ./fbxsdk
 ```
 5. `fbxsdk` 폴더 안의 파일들을 `aOpenGL/ext/fbxsdk` 폴더 안으로 복사합니다.
 
@@ -34,21 +34,21 @@ sudo apt-get install libxml2-dev
 아래 라이브러리들은 OpenGL에 필요한 라이브러리입니다.
 다음 명령어를 실행해서 설치합니다
 ```
-sudo apt-get install -y libxrandr-dev;
-  sudo apt-get install -y libxinerama-dev;
-  sudo apt-get install -y libxcursor-dev;
-  sudo apt-get install -y libxi-dev;
-  sudo apt-get install -y libgl-dev;
-  sudo apt-get install -y libglu1-mesa-dev
+sudo apt-get install -y libxrandr-dev
+sudo apt-get install -y libxinerama-dev
+sudo apt-get install -y libxcursor-dev
+sudo apt-get install -y libxi-dev
+sudo apt-get install -y libgl-dev
+sudo apt-get install -y libglu1-mesa-dev
 ```
 
 ## 설치
 aOpenGL을 설치하기 전에, GLM과 GLFW 라이브러리를 빌드해줘야 합니다.
-GLM과 GLFW는 서브모듈로 ext 폴더에 
+GLM과 GLFW는 서브모듈로 ext 폴더에 있습니다.
 
 ### GLM 빌드
-1. aOpenGL 폴더에 갑니다.
-2. 다음 명령어를 실행합니다.
+1. aOpenGL 폴더에 들어갑니다.
+2. 다음 명령어를 순서대로 실행합니다.
 ```
 cd ./ext/GLM
 mkdir build
@@ -58,8 +58,8 @@ make -j
 ```
 
 ### GLFW 빌드
-1. aOpenGL 폴더에 갑니다.
-2. 다음 명령어를 실행합니다.
+1. aOpenGL 폴더에 들어갑니다.
+2. 다음 명령어를 순서대로 실행합니다.
 ```
 cd ./ext/GLFW
 mkdir build
@@ -69,7 +69,7 @@ make -j
 ```
 
 ### aOpenGL 빌드
-1. aOpenGL 폴더에 갑니다.
+1. aOpenGL 폴더에 들어갑니다.
 2. 다음 명령어를 실행합니다.
 ```
 mkdir build
