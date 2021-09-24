@@ -50,7 +50,7 @@ GLM과 GLFW는 서브모듈로 ext 폴더에 있습니다.
 1. aOpenGL 폴더에 들어갑니다.
 2. 다음 명령어를 순서대로 실행합니다.
 ```
-cd ./ext/GLM
+cd ./ext/glm
 mkdir build
 cd build
 cmake ..
@@ -61,7 +61,7 @@ make -j
 1. aOpenGL 폴더에 들어갑니다.
 2. 다음 명령어를 순서대로 실행합니다.
 ```
-cd ./ext/GLFW
+cd ./ext/glfw
 mkdir build
 cd build
 cmake ..
@@ -76,6 +76,14 @@ mkdir build
 cd build
 cmake ..
 make -j
+```
+
+## aOpenGL 예제 파일 실행
+1. aOpenGL 폴더에 들어갑니다.
+2. 다음 명령어를 실행합니다.
+```
+cd build
+./bin/draw
 ```
 
 ## Making New Projects using aOpenGL
