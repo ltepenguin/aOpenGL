@@ -47,8 +47,7 @@ public:
     spRenderOptions texture(std::string, TextureType type = TextureType::kAlbedo, int mid = 0);
     spRenderOptions texture_repeat(float n);
     spRenderOptions disp_scale(float scale = 0.01f);
-    //spRenderOptions floor_grid(bool use_grid);
-    spRenderOptions floor_grid(bool use_grid, Vec3 line_color = Vec3(1.0f, 1.0f, 1.0f), float line_width = 1.0f, float line_interval = 1.0f);
+    spRenderOptions floor_grid(bool use_grid, float line_width = 1.0f, float line_interval = 1.0f, Vec3 line_color = Vec3(0.0f, 0.0f, 0.0f));
     spRenderOptions debug(bool);
 
 private:

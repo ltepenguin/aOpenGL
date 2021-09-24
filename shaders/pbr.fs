@@ -75,7 +75,7 @@ float filteredGrid(in vec2 p, in vec2 dpdx, in vec2 dpdy, float line_interval, f
 	p *= sizeCoeff;
 
     //const float _N = 800.0; // line size
-    float _N = 800.0 / line_width;
+    float _N = 200.0 / line_width;
     vec2 w = max(abs(dpdx), abs(dpdy));
 	w *= sizeCoeff;
     vec2 a = p + 0.5 * w;                        

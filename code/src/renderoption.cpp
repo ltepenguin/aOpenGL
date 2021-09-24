@@ -208,7 +208,7 @@ spRenderOptions RenderOptions::disp_scale(float scale)
 }
 
 //spRenderOptions RenderOptions::floor_grid(bool is_floor)
-spRenderOptions RenderOptions::floor_grid(bool use_grid, Vec3 line_color, float line_width, float line_interval)
+spRenderOptions RenderOptions::floor_grid(bool use_grid, float line_width, float line_interval, Vec3 line_color)
 {
     this->m_draw_floor_grid = use_grid;
     this->m_grid_color = to_glm(line_color);
