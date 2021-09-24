@@ -1,5 +1,4 @@
 aOpenGL은 Ubuntu에서 사용하는 OpenGL 라이브러리입니다.
-
 aOpenGL을 사용하기 위해서는 FBXSDK 와 여러가지 외부 라이브러리들이 필요합니다.
 
 ## 외부 라이브러리 다운로드
@@ -9,13 +8,13 @@ FBX 파일들을 읽는데 필요한 라이브러리이며, Autodesk 공식 페�
 
 1. FBXSDK 페이지에 들어갑니다: `https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-2-1`
 3. FBX SDK Linux 버전을 다운로드합니다.
-4. 다운로드한 폴더에 들어가서 다음 명령어를 순서대로 실행하여 압축을 풀어줍니다.
+4. 다운로드한 폴더에 들어가서 다음 명령어들을 순서대로 실행하여 압축을 풀어줍니다.
 ```
 mkdir fbxsdk_linux
 tar -xvf [FBXSDK.TAR.GZ 파일] -C fbxsdk_linux
 cd fbxsdk_linux
 ```
-4. 다음 명령어를 순서대로 실행하여 파일들을 설치합니다.
+4. 다음 명령어들을 순서대로 실행하여 파일들을 설치합니다.
 ```
 mkdir fbxsdk
 chmod ugo+x [FBXSDK 설치 파일]
@@ -85,6 +84,13 @@ make -j
 cd build
 ./bin/draw
 ```
+더 많은 예제들은 examples 폴더에 있습니다.
+
+## aOpenGL 조작법
+F1: Wireframe Mode Off
+F2: Wireframe Mode On
+F5: Capture Mode On (build/capture 폴더 안에 매프레임 저장)
+F6: Capture Mode Off
 
 ## Making New Projects using aOpenGL
 1. Go to wiki and find a page named 'How to make your new project with aOpenGL & aLibTorch'
