@@ -1,18 +1,37 @@
-## FBXSDK
-1. Go to the link:  https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0
-2. Download FBX SDK 2020.0.1 (Linux)
-3. Unzip **fbx20202_fbxsdk_linux.tar.gz**
-4. Go to the folder
-5. `mkdir fbxsdk`
-6. `chmod ugo+x FBX20202_FBXFILESDK_LINUX`
-7. `./FBX20202_FBXFILESDK_LINUX ./fbxsdk`
-8. Copy files inside the folder **./fbxsdk** into the **aOpenGL/ext/fbxsdk**
+aOpenGL은 Ubuntu에서 사용하는 OpenGL 라이브러리입니다.
+aOpenGL을 사용하기 위해서는 FBXSDK 와 여러가지 외부 라이브러리들이 필요합니다.
 
-NOTE: FBXSDK requires xml2 library
+## 라이브러리 다운
 
-`sudo apt-get install libxml2-dev`
+### FBXSDK
+FBX 파일들을 읽는데 필요한 라이브러리이며, Autodesk 공식 페이지에서 다운로드하시면 됩니다.
 
-NOTE: OpenGL dependencies
+1. 다음 링크로들어갑니다: `https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0`
+2. FBX SDK 2020.0.1 (Linux) 을 다운로드합니다. (파일명: *fbx20202_fbxsdk_linux.tar.gz*)
+3. 다운로드한 폴더에 들어가서 다음 명령어를 실행하여 압축을 풀어줍니다.
+```
+mkdir fbxsdk_linux
+tar -xvf fbx202001_fbxsdk_linux.tar.gz -C fbxsdk_linux
+cd fbxsdk_linux
+```
+4. 다음 명령어를 실행하여 파일들을 설치합니다.
+```
+mkdir fbxsdk
+chmod ugo+x FBX20202_FBXFILESDK_LINUX
+./FBX20202_FBXFILESDK_LINUX ./fbxsdk
+```
+5. `fbxsdk` 폴더 안의 파일들을 `aOpenGL/ext/fbxsdk` 폴더 안으로 복사합니다.
+
+### XML2 Library
+FBXSDK 는 XML2 라이브러리가 필요합니다.
+다음 명령어를 실행해서 설치합니다.
+```
+sudo apt-get install libxml2-dev
+```
+
+### OpenGL dependencies
+아래 라이브러리들은 OpenGL에 필요한 라이브러리입니다.
+다음 명령어를 실행해서 설치합니다
 ```
 sudo apt-get install -y libxrandr-dev
 sudo apt-get install -y libxinerama-dev
@@ -22,19 +41,40 @@ sudo apt-get install -y libgl-dev
 sudo apt-get install -y libglu1-mesa-dev
 ```
 
-## Other Libraries (GLM, GLFW)
-1. Go to the **aOpenGL/ext/[LIBRARY]**
-2. `mkdir build`
-3. `cd build`
-4. `cmake ..`
-5. `make -j`
+## 설치
+aOpenGL을 설치하기 전에, GLM과 GLFW 라이브러리를 빌드해줘야 합니다.
 
-## Build
-1. Go to the **aOpenGL/**
-2. `mkdir build`
-3. `cd build`
-4. `cmake ..`
-5. `make -j`
+### GLM 빌드
+1. aOpenGL 폴더에 갑니다.
+2. 다음 명령어를 실행합니다.
+```
+cd ./ext/GLM
+mkdir build
+cd build
+cmake ..
+make -j
+```
+
+### GLFW 빌드
+1. aOpenGL 폴더에 갑니다.
+2. 다음 명령어를 실행합니다.
+```
+cd ./ext/GLFW
+mkdir build
+cd build
+cmake ..
+make -j
+```
+
+## aOpenGL 빌드
+1. aOpenGL 폴더에 갑니다.
+2. 다음 명령어를 실행합니다.
+```
+mkdir build
+cd build
+cmake ..
+make -j
+```
 
 ## Making New Projects using aOpenGL
 1. Go to wiki and find a page named 'How to make your new project with aOpenGL & aLibTorch'
