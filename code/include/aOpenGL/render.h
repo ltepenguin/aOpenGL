@@ -1,6 +1,7 @@
 #pragma once
 #include "appmanager.h"
 #include "eigentype.h"
+#include "text.h"
 #include <memory>
 #include <glm/glm.hpp>
 
@@ -37,6 +38,7 @@ public:
     static spRenderOptions    pyramid();
     
     static spRenderOptions    arrow();
+    static spRenderOptions    text(const std::string& str, float space = 1.0f);
 
     static spRenderOptions    mesh(spMesh);
     static spRenderOptionsVec model(spModel m, bool update_mesh = true);
@@ -78,13 +80,18 @@ private:
      * @brief pbr rendering function
      */
     static void draw_pbr(spRenderOptions option, core::Shader* shader);
-    
+
     /**
      * @brief shadow rendering function
      */
     static void draw_shadow(spRenderOptions option, core::Shader* shader);
+    
+    /**
+     * @brief reder text
+     */
+    static void draw_text(spRenderOptions option, core::Shader* shader);
 
-private:
+public:
     // shadow mode
     static RenderMode render_type;
 
@@ -92,6 +99,7 @@ private:
     static core::Shader* primitive_shader;
     static core::Shader* lbs_shader;
     static core::Shader* shadow_shader;
+    static core::Shader* text_shader;
     
     static core::Shader* alpha_primitive_shader;
     static core::Shader* alpha_lbs_shader;
@@ -103,6 +111,9 @@ private:
     // environment
     static core::Shader* tocube_shader;
     static core::Shader* background_shader;
+    
+    // font texture
+    static FontTexture* font_texture;
 
     // app info
     struct AppRenderInfo;

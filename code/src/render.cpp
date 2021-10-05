@@ -9,7 +9,6 @@
 #include "aOpenGL/model.h"
 #include "aOpenGL/renderoption.h"
 #include "aOpenGL/core/primitive.h"
-
 #include "aOpenGL/config.h"
 
 #include <iostream>
@@ -23,9 +22,12 @@ Render::RenderMode Render::render_type;
 core::Shader* Render::primitive_shader;
 core::Shader* Render::lbs_shader;
 core::Shader* Render::shadow_shader;
+core::Shader* Render::text_shader;
 
 core::Shader* Render::alpha_primitive_shader;
 core::Shader* Render::alpha_lbs_shader;
+
+FontTexture* Render::font_texture;
 
 // shadows
 unsigned int Render::depth_map_fbo;
@@ -102,6 +104,30 @@ spRenderOptions Render::arrow()
     return Render::mesh(model->mesh(0));
 }
 
+spRenderOptions Render::text(const std::string& text, float line_space)
+{
+    spRenderOptions ro;
+
+    if(render_type == Render::RenderMode::SHADOW)
+    {
+        ro = std::make_shared<RenderOptions>(
+            RenderOptions(core::VAO(), nullptr, nullptr, Render::draw_pbr)
+        );
+    }
+    else
+    {
+        ro = std::make_shared<RenderOptions>(
+            RenderOptions(core::VAO(), Render::text_shader, Render::text_shader, Render::draw_text)
+        );
+        
+        ro->m_text = text;
+        ro->color(0, 0, 0);
+        ro->m_line_space = line_space;
+    }
+
+    return ro;
+}
+
 spRenderOptions Render::mesh(spMesh m)
 {
     spRenderOptions ro;
@@ -119,7 +145,7 @@ spRenderOptions Render::mesh(spMesh m)
             ro = std::make_shared<RenderOptions>(
                 RenderOptions(m->m_meshGL->vao, Render::lbs_shader, Render::alpha_lbs_shader, Render::draw_pbr)
             );
-        }        
+        }
         
         // set buffer
         ro->m_use_skinning = true;
@@ -235,6 +261,12 @@ void Render::initialize_shaders()
         = new core::Shader(absolute_path(AGL_LBS_PBR_VS), absolute_path(AGL_EMPTY_FS));
     Render::alpha_lbs_shader->build();
 
+    // text shader initialize
+    Render::text_shader 
+        = new core::Shader(absolute_path(AGL_TEXT_VS), absolute_path(AGL_TEXT_FS));
+    Render::text_shader->build();
+    font_texture = new FontTexture(absolute_path(AGL_FONT_PATH));
+    
     // IBL map initialize
     Render::tocube_shader 
         = new core::Shader(absolute_path(AGL_TOCUBE_VS), absolute_path(AGL_TOCUBE_FS));
@@ -307,7 +339,8 @@ void Render::update_render_view(App* app, int width, int height)
     static std::vector<core::Shader*> shader_list = 
     {
         Render::primitive_shader, Render::lbs_shader, 
-        Render::alpha_primitive_shader, Render::alpha_lbs_shader
+        Render::alpha_primitive_shader, Render::alpha_lbs_shader,
+        Render::text_shader
     };
     
     for(auto shader : shader_list)
@@ -466,9 +499,6 @@ void Render::draw_shadow(spRenderOptions option, core::Shader* shader)
     if(shader == nullptr)
         return;
     
-    if(shader == nullptr) 
-        return;
-
     shader->use();
     
     // set light space
@@ -496,5 +526,97 @@ void Render::draw_shadow(spRenderOptions option, core::Shader* shader)
     glDrawElements(GL_TRIANGLES, option->m_vao.idx_num, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+
+void Render::draw_text(spRenderOptions option, core::Shader* shader)
+{
+    if(shader == nullptr)
+        return;
+
+    float line_space = option->m_line_space;
+
+    std::string text = option->m_text;
+    float scale = 0.25f * option->m_scale.x / AGL_FONT_RESOLUTION;
+
+    shader->use();
+    if(shader->view_update() == false)
+    {
+        shader->setMat4("u_projection",     Render::app_render_info->cam_projection);
+        shader->setMat4("u_view",           Render::app_render_info->cam_view);
+        shader->view_update(true);
+    }
+
+    glm::mat4 transform = glm::translate(glm::mat4(1.0), option->m_position) * 
+                            glm::mat4(option->m_orientation) * 
+                            glm::scale(glm::mat4(1.0), option->m_scale);
+    shader->setMat4("u_model", transform);
+    shader->setVec3("u_textColor", option->m_materials.at(0).albedo);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(Render::font_texture->vao());
+
+    struct FontPos 
+    {
+        unsigned int textureID;
+        float xpos, ypos;
+        float w, h;
+        float advance;
+        int line;
+    };
+
+    // render
+    std::vector<FontPos> str_chars;
+    str_chars.reserve(text.length());
+
+    float xoffset = 0;
+    float yoffset = 0;
+ 
+    std::string::const_iterator c;
+    float x = 0;
+    float y = 0;
+    for (c = text.begin(); c != text.end(); c++) 
+    {
+        if(*c == '\n')
+        {
+            y -= AGL_FONT_RESOLUTION * scale * line_space;
+            x = 0;
+            continue;
+        }
+
+        const auto& ch = font_texture->character(*c);
+        FontPos fp;
+        fp.textureID = ch.TextureID;
+        fp.xpos = x + ch.Bearing.x * scale;
+        fp.ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        fp.w = ch.Size.x * scale;
+        fp.h = ch.Size.y * scale;
+        x += (ch.Advance >> 6) * scale;
+        str_chars.push_back(std::move(fp));
+    }
+
+    for(auto& f : str_chars)
+    {
+        float vertices[4 * 6] = 
+        {
+            xoffset + f.xpos,       yoffset + f.ypos + f.h,   0.0f, 0.0f,
+            xoffset + f.xpos,       yoffset + f.ypos,         0.0f, 1.0f,
+            xoffset + f.xpos + f.w, yoffset + f.ypos,         1.0f, 1.0f,
+            xoffset + f.xpos,       yoffset + f.ypos + f.h,   0.0f, 0.0f,
+            xoffset + f.xpos + f.w, yoffset + f.ypos,         1.0f, 1.0f,
+            xoffset + f.xpos + f.w, yoffset + f.ypos + f.h,   1.0f, 0.0f
+        };
+
+        // render glyph texture over quad
+        glBindTexture(GL_TEXTURE_2D, f.textureID);
+        // update content of VBO memory
+        glBindBuffer(GL_ARRAY_BUFFER, font_texture->vbo());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+}
+    
+
 
 }

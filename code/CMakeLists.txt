@@ -14,6 +14,7 @@ add_library(aOpenGL SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/model.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/render.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/renderoption.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/text.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/util.cpp
 
@@ -67,6 +68,12 @@ find_library(GLFW NAMES libglfw3.a
             REQUIRED)
 target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/glfw/include)
 
+# freetype
+find_library(FREE_TYPE NAMES libfreetype.so
+            HINTS ${EXT_DIR}/freetype/build
+            REQUIRED)
+target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/freetype/include)
+
 # fbxsdk
 find_library(FBXSDK NAMES libfbxsdk.so 
              HINTS ${EXT_DIR}/fbxsdk/lib/gcc/x64/release
@@ -76,6 +83,7 @@ target_include_directories(aOpenGL PUBLIC ${EXT_DIR}/fbxsdk/include)
 
 # link
 target_link_libraries(aOpenGL PUBLIC ${GLFW})
+target_link_libraries(aOpenGL PUBLIC ${FREE_TYPE})
 target_link_libraries(aOpenGL PUBLIC ${FBXSDK} ${XML2})
 target_link_libraries(aOpenGL PUBLIC ${CMAKE_DL_LIBS})
 

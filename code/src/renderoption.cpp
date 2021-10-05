@@ -25,6 +25,8 @@ RenderOptions::RenderOptions(core::VAO vao,
     m_debug(false),
     m_use_skinning(false),
     m_buffer_transforms(),
+    m_text(),
+    m_line_space(1.0f),
     m_fpDraw(fpDraw)
 {
 }

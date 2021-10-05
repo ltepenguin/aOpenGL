@@ -86,6 +86,10 @@ private:
     bool                   m_use_skinning;
     std::vector<glm::mat4> m_buffer_transforms;
 
+    // text
+    std::string            m_text;
+    float                  m_line_space;
+
     // final drawing function pointer
     void (*m_fpDraw)(spRenderOptions, core::Shader* shader);
 };

@@ -14,6 +14,10 @@ target_link_libraries(model PUBLIC aOpenGL)
 add_executable(motion ${CMAKE_CURRENT_SOURCE_DIR}/04_motion.cpp)
 target_link_libraries(motion PUBLIC aOpenGL)
 
+# example 05: text
+add_executable(text ${CMAKE_CURRENT_SOURCE_DIR}/05_text.cpp)
+target_link_libraries(text PUBLIC aOpenGL)
+
 # example 05: wireframe
 add_executable(wireframe ${CMAKE_CURRENT_SOURCE_DIR}/05_wireframe.cpp)
 target_link_libraries(wireframe PUBLIC aOpenGL)
