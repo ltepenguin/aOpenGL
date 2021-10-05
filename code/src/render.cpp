@@ -2,6 +2,7 @@
 
 #include "aOpenGL/app.h"
 #include "aOpenGL/camera.h"
+#include "aOpenGL/fbx.h"
 #include "aOpenGL/joint.h"
 #include "aOpenGL/light.h"
 #include "aOpenGL/mesh.h"
@@ -49,6 +50,12 @@ std::shared_ptr<Render::AppRenderInfo> Render::app_render_info;
 
 // Functions *** //
 
+static std::string absolute_path(const char* path)
+{
+    static const std::string agl_path(AGL_PATH);
+    return agl_path + std::string(path);
+}
+
 #define AGL_RETURN_PBR_RENDER_OPTIONS(PRIMITIVE) \
     if(render_type == Render::RenderMode::SHADOW) { \
         return std::make_shared<RenderOptions>( \
@@ -87,6 +94,12 @@ spRenderOptions Render::cone()
 spRenderOptions Render::pyramid()
 {
     AGL_RETURN_PBR_RENDER_OPTIONS(core::VAOPrimitive::pyramid());
+}
+
+spRenderOptions Render::arrow()
+{
+    static spModel model = FBX(absolute_path(AGL_ARROW_FBX)).model();
+    return Render::mesh(model->mesh(0));
 }
 
 spRenderOptions Render::mesh(spMesh m)
@@ -198,12 +211,6 @@ static void generate_shadow_buffer(GLuint& fbo, GLuint& shadow_map, int reolusti
     
     // reset the frame buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-static std::string absolute_path(const char* path)
-{
-    static const std::string agl_path(AGL_PATH);
-    return agl_path + std::string(path);
 }
 
 void Render::initialize_shaders()

@@ -22,8 +22,6 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
 
-    const char* keyName = glfwGetKeyName(key, 0);
-
     if(key == GLFW_KEY_F1 && action == GLFW_PRESS)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -42,13 +40,19 @@ void App::key_callback(GLFWwindow* window, int key, int scancode, int action, in
         this->capture(false);
     }
 
+    key_callback(key, action);
+
+    const char* keyName = glfwGetKeyName(key, 0);
     if(keyName != nullptr)
     {
         key_callback(keyName[0], action);
-    }    
+    }
 }
 
 void App::key_callback(char key, int action)
+{}
+
+void App::key_callback(int key, int action)
 {}
 
 void App::mouse_callback(GLFWwindow* window, double xpos, double ypos)

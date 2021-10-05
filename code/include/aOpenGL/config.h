@@ -22,3 +22,6 @@
 
 // Shadow map size
 #define AGL_SHADOW_MAP_SIZE        4 * 1024
+
+// Arrow FBX Path
+#define AGL_ARROW_FBX               "/data/fbx/etc/arrow.fbx"

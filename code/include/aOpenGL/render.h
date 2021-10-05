@@ -30,11 +30,13 @@ public:
     static spRenderOptions    cube();
     static spRenderOptions    sphere();
     static spRenderOptions    plane();
-
+    
     // todo: normal 확인하기.
     static spRenderOptions    cylinder();
     static spRenderOptions    cone();
     static spRenderOptions    pyramid();
+    
+    static spRenderOptions    arrow();
 
     static spRenderOptions    mesh(spMesh);
     static spRenderOptionsVec model(spModel m, bool update_mesh = true);

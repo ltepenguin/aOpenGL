@@ -22,6 +22,7 @@ public:
    virtual void render(){}
    virtual void render_xray(){}
    virtual void key_callback(char key, int action);
+   virtual void key_callback(int key, int action);
 
    // opengl key call back functions
 
