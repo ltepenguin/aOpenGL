@@ -67,6 +67,17 @@ cmake ..
 make -j
 ```
 
+### FREETYPE 빌드
+1. aOpenGL 폴더에 들어갑니다.
+2. 다음 명령어를 순서대로 실행합니다.
+```
+cd ./ext/freetype
+mkdir build
+cd build
+cmake -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release ..
+make -j
+```
+
 ### aOpenGL 빌드
 1. aOpenGL 폴더에 들어갑니다.
 2. 다음 명령어를 실행합니다.
