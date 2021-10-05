@@ -143,10 +143,10 @@ void KinMotion::apply_basisTrf_filter(int filter_size)
     return kin::apply_basisTrf_filter(kmotion, filter_size);
 }
 
-void KinMotion::init_world_basisTrf_from_shoulders(const std::string& Rshl, const std::string& Lshl)
+void KinMotion::init_world_basisTrf_from_shoulders(const std::string& Lshl, const std::string& Rshl)
 {
     spKinMotion kmotion = shared_from_this();
-    return kin::init_world_basisTrf_from_shoulders(kmotion, Rshl, Lshl);
+    return kin::init_world_basisTrf_from_shoulders(kmotion, Lshl, Rshl);
 }
 
 int KinMotion::get_pidx(const std::string& take_name, int fbx_frame, int fbx_fps)
@@ -238,7 +238,7 @@ void apply_basisTrf_filter(spKinMotion& kmotion, int filter_size)
     }
 }
 
-void init_world_basisTrf_from_shoulders(spKinMotion& self, const std::string& Rshl, const std::string& Lshl)
+void init_world_basisTrf_from_shoulders(spKinMotion& self, const std::string& Lshl, const std::string& Rshl)
 {
     // find right & left shoulder index
     int Ridx = self->kmodel->jnt_name_to_idx.at(Rshl);
