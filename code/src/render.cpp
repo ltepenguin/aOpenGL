@@ -104,6 +104,12 @@ spRenderOptions Render::arrow()
     return Render::mesh(model->mesh(0));
 }
 
+spRenderOptionsVec Render::axis()
+{
+    static spModel model = FBX(absolute_path(AGL_AXIS_FBX)).model();
+    return Render::model(model);
+}
+
 spRenderOptions Render::text(const std::string& text, float line_space)
 {
     spRenderOptions ro;

@@ -29,6 +29,7 @@
 
 // Arrow FBX Path
 #define AGL_ARROW_FBX               "/data/fbx/etc/arrow.fbx"
+#define AGL_AXIS_FBX                "/data/fbx/etc/axis.fbx"
 
 #define AGL_FONT_PATH               "/data/fonts/NotoSans-Regular.ttf"
 #define AGL_FONT_RESOLUTION         256

@@ -23,6 +23,13 @@ struct KinPose
     KinPose& operator=(const KinPose&)  = default;
     KinPose& operator=(KinPose&&)       = default;
 
+    /**
+     * @return projected root trf object
+     */
+    Mat4 get_projected_root_trf() const;
+
+    void init_world_basisTrf();
+
     void init_world_basisTrf_from_shoulders(int Ridx, int Lidx); // initialize baseTrf using shoulder joints
     
     /**
@@ -72,6 +79,10 @@ public:
 namespace kin {
 
 void recompute_local_root(KinPose& self);
+
+Mat4 get_projected_root_trf(const KinPose& self);
+
+void init_world_basisTrf(KinPose& self);
 
 /**
  * @brief This function changes the basis and local root transformation.

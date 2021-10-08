@@ -38,6 +38,7 @@ public:
     static spRenderOptions    pyramid();
     
     static spRenderOptions    arrow();
+    static spRenderOptionsVec axis();
     static spRenderOptions    text(const std::string& str, float space = 1.0f);
 
     static spRenderOptions    mesh(spMesh);

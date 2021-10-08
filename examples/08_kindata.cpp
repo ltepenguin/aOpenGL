@@ -2,8 +2,8 @@
 #include <iostream>
 
 // Configuration -------------------------------------------- //
-const char* model_path  = "../data/fbx/kmodel/model/kmodel.fbx";
-const char* motion_path = "../data/fbx/kmodel/motion/ubi_sprint1_subject2.fbx";
+const char* model_path  = "../../_data/kmodel/model/kmodel.fbx";
+const char* motion_path = "../../_data/kmodel/motion/ubi_sprint1_subject2.fbx";
 const std::vector<std::string> joint_names = {
     "Hips", 
     "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToeBase",
@@ -43,8 +43,8 @@ public:
         
         kmodel = agl::kinmodel(model, joint_names);
         kmotion = agl::kinmotion(kmodel, motions);
-        kmotion->init_world_basisTrf_from_shoulders(left_shoulder, right_shoulder);
-        kmotion->apply_basisTrf_filter(3);
+        //kmotion->init_world_basisTrf_from_shoulders(left_shoulder, right_shoulder);
+        //kmotion->apply_basisTrf_filter(3);
 
         // test displacements
         int nof = kmotion->poses.size();
@@ -83,19 +83,14 @@ public:
 
     void render_xray() override
     {
-        agl::Render::cube()
+        agl::Render::arrow()
             ->transform(kpose.world_basisTrf)
-            ->scale(0.1f)
-            ->color(0, 1, 0)
-            ->debug(true)
             ->draw();
 
         for(auto trf : kpose.world_trfs)
         {
-            agl::Render::cube()
+            agl::Render::axis()
                 ->transform(trf)
-                ->color(1, 1, 0)
-                ->scale(0.05f)
                 ->debug(true)
                 ->draw();
         }
@@ -107,19 +102,16 @@ public:
             ->debug(true)
             ->draw();
         
-        agl::Render::cube()
+        agl::Render::arrow()
             ->transform(simul_pose.world_basisTrf)
-            ->scale(0.1f)
-            ->color(0, 0, 1)
+            ->scale(2.5f)
             ->debug(true)
             ->draw();
 
         for(auto trf : simul_pose.world_trfs)
         {
-            agl::Render::cube()
+            agl::Render::axis()
                 ->transform(trf)
-                ->color(1, 0, 1)
-                ->scale(0.05f)
                 ->debug(true)
                 ->draw();
         }
