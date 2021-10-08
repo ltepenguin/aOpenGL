@@ -35,7 +35,8 @@ static std::vector<KinPose> _get_poses(const spKinModel& kmodel,
         pose.world_trfs = kin::compute_fk(kmodel, pose.world_basisTrf, pose.local_pos, pose.local_rots);
 
         // this will compute root's local_pos and local_rots
-        kin::reset_world_basisTrf(pose, pose.world_trfs.at(0));
+        //kin::reset_world_basisTrf(pose, pose.world_trfs.at(0));
+        kin::reset_world_basisTrf(pose, pose.get_projected_root_trf());
 
         poses.push_back(std::move(pose));
     }

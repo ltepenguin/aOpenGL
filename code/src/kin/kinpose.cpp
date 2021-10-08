@@ -4,6 +4,16 @@
 
 namespace a::gl {
 
+Mat4 KinPose::get_projected_root_trf() const
+{
+    return kin::get_projected_root_trf(*this);
+}
+
+void KinPose::init_world_basisTrf()
+{
+    kin::init_world_basisTrf(*this);
+}
+
 void KinPose::init_world_basisTrf_from_shoulders(int Ridx, int Lidx)
 {
     kin::init_world_basisTrf_from_shoulders(*this, Ridx, Lidx);
@@ -60,6 +70,35 @@ void recompute_local_root(KinPose& self)
     self.local_rots.at(0).block<3, 3>(0,0) = local_R.block<3, 3>(0, 0);
 }
 
+Mat4 get_projected_root_trf(const KinPose& self)
+{
+    Vec3 root_x = self.world_trfs.at(0).col(0).head<3>();
+    root_x.y() = 0;
+    root_x.normalize();
+
+    Vec3 root_z = self.world_trfs.at(0).col(2).head<3>();
+    root_z.y() = 0.0f;
+    root_z.normalize();
+
+    Mat4 world_basisTrf = Mat4::Identity();
+    world_basisTrf.block<3, 1>(0, 0) = root_x;
+    world_basisTrf.block<3, 1>(0, 1) = Vec3::UnitY();
+    world_basisTrf.block<3, 1>(0, 2) = root_z;
+
+    // set position
+    Vec3 basis_pos = self.world_trfs.at(0).col(3).head<3>();
+    basis_pos.y() = 0.0f;
+    world_basisTrf.block<3, 1>(0, 3) = basis_pos;
+
+    return world_basisTrf;
+}
+
+void init_world_basisTrf(KinPose& self)
+{
+    self.world_basisTrf = get_projected_root_trf(self);
+    kin::recompute_local_root(self);
+}
+
 void init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx)
 {
     Vec3 root_x = self.world_trfs.at(0).col(0).head<3>();
@@ -74,7 +113,8 @@ void init_world_basisTrf_from_shoulders(KinPose& self, int Ridx, int Lidx)
     shl_x.normalize();    
     
     // average
-    Vec3 basisX = shl_x.normalized();
+    Vec3 basisX = 0.5f * shl_x.normalized() + 0.5f * root_x;
+    basisX.normalize();
     Vec3 basisZ = basisX.cross(Vec3::UnitY());
     
     // set orientation
