@@ -109,6 +109,7 @@ public:
     spRenderOptionsVec scale(float);
     spRenderOptionsVec transform(Mat4);
     spRenderOptionsVec color(Vec3);
+    spRenderOptionsVec color(Vec3 clr, int mid);
     spRenderOptionsVec color(float r, float g, float b);
     spRenderOptionsVec metallic(float);
     spRenderOptionsVec roughness(float);

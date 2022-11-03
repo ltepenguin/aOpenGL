@@ -306,6 +306,13 @@ spRenderOptionsVec RenderOptionsVec::color(Vec3 v3)
     return shared_from_this();
 }
 
+spRenderOptionsVec RenderOptionsVec::color(Vec3 v3, int mid)
+{
+    // check mid range
+    m_render_list[mid]->color(v3);
+    return shared_from_this();
+}
+
 spRenderOptionsVec RenderOptionsVec::color(float r, float g, float b)
 {
     for(auto& ro : m_render_list)
